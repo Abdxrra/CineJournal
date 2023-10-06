@@ -5,10 +5,14 @@ color white
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 id aPropos
+id button
 id textView
+id textView2
+id textView3
 id toolbar
 id toutSupprimer
 id trierAnnee
+id trierMode
 id trierNote
 id trierPar
 id trierTitre
