@@ -3101,6 +3101,7 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id button
 id buttonPanel
 id cache_measures
 id callMeasure
@@ -3449,6 +3450,8 @@ id textSpacerNoTitle
 id textStart
 id textTop
 id textView
+id textView2
+id textView3
 id text_input_end_icon
 id text_input_error_icon
 id text_input_start_icon
@@ -3477,6 +3480,7 @@ id transition_scene_layoutid_cache
 id transition_transform
 id triangle
 id trierAnnee
+id trierMode
 id trierNote
 id trierPar
 id trierTitre
