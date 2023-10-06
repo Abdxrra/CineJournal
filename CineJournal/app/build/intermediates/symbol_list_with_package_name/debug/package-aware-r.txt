@@ -3016,6 +3016,7 @@ id SHOW_PROGRESS
 id SYM
 id TOP_END
 id TOP_START
+id aPropos
 id accelerate
 id accessibility_action_clickable_span
 id accessibility_custom_action_0
@@ -3447,6 +3448,7 @@ id textSpacerNoButtons
 id textSpacerNoTitle
 id textStart
 id textTop
+id textView
 id text_input_end_icon
 id text_input_error_icon
 id text_input_start_icon
@@ -3461,9 +3463,11 @@ id title
 id titleDividerNoCustom
 id title_template
 id toggle
+id toolbar
 id top
 id topPanel
 id touch_outside
+id toutSupprimer
 id transitionToEnd
 id transitionToStart
 id transition_current_scene
@@ -3472,6 +3476,11 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id trierAnnee
+id trierNote
+id trierPar
+id trierTitre
+id trouverFilm
 id unchecked
 id uniform
 id unlabeled
@@ -3608,6 +3617,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_apropos
 layout activity_main
 layout custom_dialog
 layout design_bottom_navigation_item
@@ -3686,6 +3696,8 @@ layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
+layout toolbar
+menu menu
 mipmap ic_launcher
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description

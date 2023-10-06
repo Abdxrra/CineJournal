@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:1-26:12
+ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:1-29:12
+INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:1-29:12
+INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:1-29:12
+INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:1-29:12
 MERGED from [androidx.room:room-ktx:2.5.2] C:\Users\2078693\.gradle\caches\transforms-3\71075cfc3fc4cafc270deffeabdfe8de\transformed\room-ktx-2.5.2\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.room:room-runtime:2.5.2] C:\Users\2078693\.gradle\caches\transforms-3\b5b3533ebad328692074a97697af58ce\transformed\room-runtime-2.5.2\AndroidManifest.xml:17:1-31:12
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\2078693\.gradle\caches\transforms-3\7de849b944059288ca5485016858c08d\transformed\material-1.9.0\AndroidManifest.xml:17:1-26:12
@@ -63,8 +63,8 @@ MERGED from [androidx.print:print:1.0.0] C:\Users\2078693\.gradle\caches\transfo
 	xmlns:android
 		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:2:11-69
 application
-ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:5:5-24:19
-INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:5:5-24:19
+ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:5:5-27:19
+INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:5:5-27:19
 MERGED from [androidx.room:room-runtime:2.5.2] C:\Users\2078693\.gradle\caches\transforms-3\b5b3533ebad328692074a97697af58ce\transformed\room-runtime-2.5.2\AndroidManifest.xml:23:5-29:19
 MERGED from [androidx.room:room-runtime:2.5.2] C:\Users\2078693\.gradle\caches\transforms-3\b5b3533ebad328692074a97697af58ce\transformed\room-runtime-2.5.2\AndroidManifest.xml:23:5-29:19
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\2078693\.gradle\caches\transforms-3\7de849b944059288ca5485016858c08d\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
@@ -105,22 +105,28 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\2078693\.gradle\ca
 		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:13:9-49
 	android:dataExtractionRules
 		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:7:9-65
-activity#ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.MainActivity
-ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:15:9-23:20
+activity#ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.AProposActivity
+ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:15:9-17:40
 	android:exported
-		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:17:13-36
+		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:17:13-37
 	android:name
-		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:16:13-41
+		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:16:13-44
+activity#ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.MainActivity
+ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:18:9-26:20
+	android:exported
+		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:20:13-36
+	android:name
+		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:19:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:18:13-22:29
+ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:21:13-25:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:19:17-69
+ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:22:17-69
 	android:name
-		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:19:25-66
+		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:22:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:21:17-77
+ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:24:17-77
 	android:name
-		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:21:27-74
+		ADDED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml:24:27-74
 uses-sdk
 INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\2078693\Documents\Github\CineJournal\CineJournal\app\src\main\AndroidManifest.xml

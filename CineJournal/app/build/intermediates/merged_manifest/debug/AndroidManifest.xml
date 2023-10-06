@@ -28,6 +28,9 @@
         android:testOnly="true"
         android:theme="@style/Theme.CineJournal" >
         <activity
+            android:name="ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.AProposActivity"
+            android:exported="false" />
+        <activity
             android:name="ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.MainActivity"
             android:exported="true" >
             <intent-filter>

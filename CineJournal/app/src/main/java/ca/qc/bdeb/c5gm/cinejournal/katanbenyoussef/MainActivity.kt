@@ -1,8 +1,12 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,15 +17,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1. BD avec clients
-        // 1.5 Add client dans BD avec COROUTINE
-        val nouveauClient = Client(null, "Abder", "Katan", "514-444-3333")
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        /*val nouveauClient = Client(null, "Abder", "Katan", "514-444-3333")
         lifecycleScope.launch {
             insererClient(nouveauClient)
 
             val client = getClient()
             val texte:TextView = findViewById(R.id.text)
             texte.setText(client.nom)
+        }*/
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.aPropos -> {
+                val intent = Intent(applicationContext, AProposActivity::class.java)
+                startActivity(intent)
+                true
+            }
+
+            else -> false
         }
     }
 

@@ -15,15 +15,22 @@ data class Client(
 interface ClientDao {
     @Query("SELECT * FROM Client")
     suspend fun getAll(): List<Client>
+
     @Query("SELECT * FROM Client WHERE uid IN (:userIds)")
     suspend fun loadAllByIds(userIds: IntArray): List<Client>
-    @Query("SELECT * FROM Client WHERE prenom LIKE :prenom AND " +
-            "nom LIKE :nom LIMIT 1")
+
+    @Query(
+        "SELECT * FROM Client WHERE prenom LIKE :prenom AND " +
+                "nom LIKE :nom LIMIT 1"
+    )
     suspend fun findByName(prenom: String, nom: String): Client
+
     @Insert
     suspend fun insertAll(vararg clients: Client)
+
     @Update
     suspend fun updateAll(vararg clients: Client)
+
     @Delete
     suspend fun delete(client: Client)
 }
@@ -31,7 +38,8 @@ interface ClientDao {
 @Database(entities = [Client::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun clientDao(): ClientDao
-    companion object{
+
+    companion object {
         // Singleton empêche plusieurs instances de la base
         // d'être ouvertes en même temps
         @Volatile
@@ -44,7 +52,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "sqlite_database"
-                ) .fallbackToDestructiveMigration()
+                ).fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 // return instance
