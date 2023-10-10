@@ -14,45 +14,45 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/itemTitle"
+            android:id="@+id/filmTitle"
             android:layout_width="241dp"
             android:layout_height="35dp"
-            android:text="Item Title"
+            android:text="Titre"
             android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/itemDescription"
+            app:layout_constraintBottom_toTopOf="@+id/filmDescription"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/itemImage"
+            app:layout_constraintStart_toEndOf="@+id/filmImage"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/itemImage"
+            android:id="@+id/filmImage"
             android:layout_width="130dp"
             android:layout_height="133dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/itemDescription"
+            app:layout_constraintEnd_toStartOf="@+id/filmDescription"
             app:layout_constraintHorizontal_bias="0.615"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/itemDescription"
+            android:id="@+id/filmDescription"
             android:layout_width="241dp"
             android:layout_height="30dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+            android:text="Slogan"
+            app:layout_constraintBottom_toTopOf="@+id/filmRating"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/itemImage"
-            app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+            app:layout_constraintStart_toEndOf="@+id/filmImage"
+            app:layout_constraintTop_toBottomOf="@+id/filmTitle" />
 
         <RatingBar
-            android:id="@+id/ratingBar"
+            android:id="@+id/filmRating"
             android:layout_width="241dp"
             android:layout_height="51dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/itemImage"
-            app:layout_constraintTop_toBottomOf="@+id/itemDescription" />
+            app:layout_constraintStart_toEndOf="@+id/filmImage"
+            app:layout_constraintTop_toBottomOf="@+id/filmDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

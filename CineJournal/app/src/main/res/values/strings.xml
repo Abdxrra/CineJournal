@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CineJournal</string>
+    <string name="app_name">Ciné Journal</string>
     <string name="titre">Titre</string>
     <string name="slogan">Slogan</string>
     <string name="ann_e">Année</string>
@@ -11,4 +11,6 @@
     <string name="mes_films">Mes films</string>
     <string name="ajouter">Ajouter</string>
     <string name="tri_par_titre">Tri par titre</string>
+    <string name="credits">Par Abderrahmane Katan et Salim Ben Youssef dans le cadre du cours 420-5GM-RE.</string>
+    <string name="titre_film">Titre film</string>
 </resources>

@@ -14,9 +14,9 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     init {
         layout = itemView as ConstraintLayout
-        image = itemView.findViewById(R.id.itemImage)
-        nom = itemView.findViewById(R.id.itemTitle)
-        description = itemView.findViewById(R.id.itemDescription)
-        rate = itemView.findViewById(R.id.ratingBar)
+        image = itemView.findViewById(R.id.filmImage)
+        nom = itemView.findViewById(R.id.filmTitle)
+        description = itemView.findViewById(R.id.filmDescription)
+        rate = itemView.findViewById(R.id.filmRating)
     }
 }
