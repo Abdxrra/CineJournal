@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">CineJournal</string>
+    <string name="titre">Titre</string>
+    <string name="slogan">Slogan</string>
+    <string name="ann_e">Année</string>
+    <string name="note">Note</string>
+    <string name="image">IMAGE</string>
+    <string name="annuler">ANNULER</string>
+    <string name="sauvegarder">SAUVEGARDER</string>
+    <string name="titre_activity">Nouveau Film</string>
+    <string name="mes_films">Mes films</string>
+    <string name="ajouter">Ajouter</string>
+    <string name="tri_par_titre">Tri par titre</string>
 </resources>
