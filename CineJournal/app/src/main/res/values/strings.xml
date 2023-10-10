@@ -16,4 +16,5 @@
     <string name="trouver_un_film">Trouver un film</string>
     <string name="titre_du_film">Titre du film</string>
     <string name="rechercher">Rechercher</string>
+    <string name="messageAjouterFilm">Rien pour le moment, ajoutez un premier film !</string>
 </resources>
