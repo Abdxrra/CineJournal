@@ -3180,6 +3180,9 @@ id easeInOut
 id easeOut
 id east
 id edge
+id editTextText2
+id editTextText3
+id editTextText4
 id edit_query
 id elastic
 id embed

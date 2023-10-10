@@ -11,6 +11,9 @@ id aPropos
 id annee
 id button
 id button2
+id editTextText2
+id editTextText3
+id editTextText4
 id filmDescription
 id filmImage
 id filmRating

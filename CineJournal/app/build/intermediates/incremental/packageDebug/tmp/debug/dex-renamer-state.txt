@@ -1,4 +1,4 @@
-#Tue Oct 10 10:40:13 EDT 2023
+#Tue Oct 10 10:55:33 EDT 2023
 base.0=C\:\\Users\\2063054\\Documents\\GitHub\\CineJournal\\CineJournal\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\2063054\\Documents\\GitHub\\CineJournal\\CineJournal\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.2=C\:\\Users\\2063054\\Documents\\GitHub\\CineJournal\\CineJournal\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\3\\classes.dex

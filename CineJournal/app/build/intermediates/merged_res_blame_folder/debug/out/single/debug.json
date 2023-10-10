@@ -124,12 +124,12 @@
         "source": "C:\\Users\\2063054\\.gradle\\daemon\\8.0\\ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.app-main-40:\\mipmap-xxxhdpi\\logo_round.webp"
     },
     {
-        "merged": "ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.app-merged_res-38:/layout_activity_ajout_edit_film.xml.flat",
-        "source": "ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.app-main-40:/layout/activity_ajout_edit_film.xml"
-    },
-    {
         "merged": "C:\\Users\\2063054\\.gradle\\daemon\\8.0\\ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.app-merged_res-38:\\mipmap-xxxhdpi_logo.webp.flat",
         "source": "C:\\Users\\2063054\\.gradle\\daemon\\8.0\\ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.app-main-40:\\mipmap-xxxhdpi\\logo.webp"
+    },
+    {
+        "merged": "ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.app-merged_res-38:/layout-land_activity_ajout_edit_film.xml.flat",
+        "source": "ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.app-main-40:/layout-land/activity_ajout_edit_film.xml"
     },
     {
         "merged": "C:\\Users\\2063054\\.gradle\\daemon\\8.0\\ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.app-merged_res-38:\\mipmap-hdpi_logo.webp.flat",
