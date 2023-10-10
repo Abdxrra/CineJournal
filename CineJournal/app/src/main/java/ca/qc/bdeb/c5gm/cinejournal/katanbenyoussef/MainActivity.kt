@@ -1,5 +1,6 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
+import android.content.ClipData.Item
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,13 +32,15 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         recyclerView = findViewById(R.id.recyclerView)
-        val listeFilms = listOf(
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.0),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.0),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.0),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.0)
+        val listeFilmss = ArrayList<ItemView>()
+        listeFilmss.add(ItemView(R.drawable.logo_background, "Hi", "dsadsadsad", 2.0, 2013))
+        val listeFilms = mutableListOf(
+            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 2.0, 2002),
+            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.5, 2003),
+            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 1.0, 2015),
+            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 4.5, 2023)
         )
-        adapteur = AdapteurListeFilm(applicationContext, this, listeFilms)
+        adapteur = AdapteurListeFilm(applicationContext, this, listeFilmss)
         recyclerView.adapter = adapteur
 
         /*val nouveauClient = Client(null, "Abder", "Katan", "514-444-3333")
