@@ -61,6 +61,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+            R.id.trouverFilm ->{
+                val intent = Intent(applicationContext, RechercheActivity::class.java)
+                startActivity(intent)
+                true
+            }
 
             else -> false
         }
@@ -74,5 +79,10 @@ class MainActivity : AppCompatActivity() {
     suspend fun getClient() = withContext(Dispatchers.IO) {
         val dao = AppDatabase.getDatabase(applicationContext).clientDao()
         dao.findByName("abder", "katan")
+    }
+
+    fun ajouterFilm(v: View) {
+        val intent = Intent(applicationContext, AjouterEditerFilm::class.java)
+        startActivity(intent)
     }
 }

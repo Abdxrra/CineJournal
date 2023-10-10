@@ -16,6 +16,12 @@
             android:name=".AProposActivity"
             android:exported="false" />
         <activity
+            android:name=".RechercheActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AjouterEditerFilm"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

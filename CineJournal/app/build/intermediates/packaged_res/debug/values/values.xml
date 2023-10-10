@@ -2,7 +2,24 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <string name="app_name">CineJournal</string>
+    <string name="ajouter">Ajouter</string>
+    <string name="ann_e">Année</string>
+    <string name="annuler">ANNULER</string>
+    <string name="app_name">Ciné Journal</string>
+    <string name="credits">Par Abderrahmane Katan et Salim Ben Youssef dans le cadre du cours 420-5GM-RE.</string>
+    <string name="image">IMAGE</string>
+    <string name="mes_films">Mes films</string>
+    <string name="messageAjouterFilm">Rien pour le moment, ajoutez un premier film !</string>
+    <string name="note">Note</string>
+    <string name="rechercher">Rechercher</string>
+    <string name="sauvegarder">SAUVEGARDER</string>
+    <string name="slogan">Slogan</string>
+    <string name="titre">Titre</string>
+    <string name="titre_activity">Nouveau Film</string>
+    <string name="titre_du_film">Titre du film</string>
+    <string name="titre_film">Titre film</string>
+    <string name="tri_par_titre">Tri par titre</string>
+    <string name="trouver_un_film">Trouver un film</string>
     <style name="Base.Theme.CineJournal" parent="Theme.Material3.DayNight.NoActionBar">
         
         

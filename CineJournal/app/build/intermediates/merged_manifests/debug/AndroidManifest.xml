@@ -31,6 +31,12 @@
             android:name="ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.AProposActivity"
             android:exported="false" />
         <activity
+            android:name="ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.RechercheActivity"
+            android:exported="false" />
+        <activity
+            android:name="ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.AjouterEditerFilm"
+            android:exported="false" />
+        <activity
             android:name="ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.MainActivity"
             android:exported="true" >
             <intent-filter>
