@@ -1,12 +1,16 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
+import android.content.ClipData.Item
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.widget.Adapter
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -22,12 +26,15 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var recyclerView: RecyclerView
     lateinit var adapteur: AdapteurListeFilm
+    lateinit var noFilmText: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        noFilmText = findViewById(R.id.noFilmText)
 
         recyclerView = findViewById(R.id.recyclerView)
         val listeFilms = listOf(
@@ -39,14 +46,13 @@ class MainActivity : AppCompatActivity() {
         adapteur = AdapteurListeFilm(applicationContext, this, listeFilms)
         recyclerView.adapter = adapteur
 
-        /*val nouveauClient = Client(null, "Abder", "Katan", "514-444-3333")
-        lifecycleScope.launch {
-            insererClient(nouveauClient)
+        var ajouterBtn: Button = findViewById(R.id.ajouter)
+        ajouterBtn.setOnClickListener{
+            val intent = Intent(applicationContext, AjouterEditerFilm::class.java)
+            intent.putExtra("Mode", "Ajouter");
+            startActivity(intent)
+        }
 
-            val client = getClient()
-            val texte:TextView = findViewById(R.id.text)
-            texte.setText(client.nom)
-        }*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -66,6 +72,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+            R.id.toutSupprimer ->{
+                // ajouter le code pour update la liste et la BD
+                updateRecyclerView()
+                true
+            }
 
             else -> false
         }
@@ -81,8 +92,15 @@ class MainActivity : AppCompatActivity() {
         dao.findByName("abder", "katan")
     }
 
-    fun ajouterFilm(v: View) {
-        val intent = Intent(applicationContext, AjouterEditerFilm::class.java)
-        startActivity(intent)
+    fun ajouterFilm() {
+        // ajouter code pour ajouter un film dans la bd et la liste
+        updateRecyclerView()
+    }
+
+    fun updateRecyclerView(){
+        if(adapteur.itemCount != 0){
+            noFilmText.visibility = INVISIBLE
+            recyclerView.visibility = VISIBLE
+        }
     }
 }

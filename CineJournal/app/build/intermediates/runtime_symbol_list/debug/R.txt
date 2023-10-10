@@ -3076,6 +3076,7 @@ int id action_text 0x7f080045
 int id actions 0x7f080046
 int id activity_chooser_view_content 0x7f080047
 int id add 0x7f080048
+int id ajouter 0x7f08021b
 int id alertTitle 0x7f080049
 int id aligned 0x7f08004a
 int id all 0x7f08004b
@@ -3083,7 +3084,6 @@ int id allStates 0x7f08004c
 int id always 0x7f08004d
 int id animateToEnd 0x7f08004e
 int id animateToStart 0x7f08004f
-int id annee 0x7f080050
 int id antiClockwise 0x7f080051
 int id anticipate 0x7f080052
 int id arc 0x7f080053
@@ -3104,7 +3104,6 @@ int id bounce 0x7f080061
 int id bounceBoth 0x7f080062
 int id bounceEnd 0x7f080063
 int id bounceStart 0x7f080064
-int id button 0x7f080065
 int id button2 0x7f080066
 int id buttonPanel 0x7f080067
 int id cache_measures 0x7f080068
@@ -3179,9 +3178,12 @@ int id easeInOut 0x7f0800ac
 int id easeOut 0x7f0800ad
 int id east 0x7f0800ae
 int id edge 0x7f0800af
+int id editTextText 0x7f080217
 int id editTextText2 0x7f080214
 int id editTextText3 0x7f080215
 int id editTextText4 0x7f080216
+int id editTextText5 0x7f080218
+int id editTextText6 0x7f080219
 int id edit_query 0x7f0800b0
 int id elastic 0x7f0800b1
 int id embed 0x7f0800b2
@@ -3328,6 +3330,7 @@ int id navigation_header_container 0x7f08013f
 int id never 0x7f080140
 int id neverCompleteToEnd 0x7f080141
 int id neverCompleteToStart 0x7f080142
+int id noFilmText 0x7f08021a
 int id noScroll 0x7f080143
 int id noState 0x7f080144
 int id none 0x7f080145
@@ -3418,7 +3421,6 @@ int id sin 0x7f080199
 int id skipCollapsed 0x7f08019a
 int id skipped 0x7f08019b
 int id slide 0x7f08019c
-int id slogan 0x7f08019d
 int id snackbar_action 0x7f08019e
 int id snackbar_text 0x7f08019f
 int id snap 0x7f0801a0
@@ -3464,9 +3466,6 @@ int id tag_window_insets_animation_callback 0x7f0801c7
 int id text 0x7f0801c8
 int id text2 0x7f0801c9
 int id textEnd 0x7f0801ca
-int id textInputLayout 0x7f0801cb
-int id textInputLayout2 0x7f0801cc
-int id textInputLayout3 0x7f0801cd
 int id textSpacerNoButtons 0x7f0801ce
 int id textSpacerNoTitle 0x7f0801cf
 int id textStart 0x7f0801d0
@@ -3479,7 +3478,6 @@ int id textView5 0x7f0801d6
 int id textView6 0x7f0801d7
 int id textView7 0x7f0801d8
 int id textView8 0x7f0801d9
-int id textView9 0x7f0801da
 int id text_input_end_icon 0x7f0801db
 int id text_input_error_icon 0x7f0801dc
 int id text_input_start_icon 0x7f0801dd
@@ -3493,7 +3491,6 @@ int id time 0x7f0801e4
 int id title 0x7f0801e5
 int id titleDividerNoCustom 0x7f0801e6
 int id title_template 0x7f0801e7
-int id titre 0x7f0801e8
 int id toggle 0x7f0801e9
 int id toolbar 0x7f0801ea
 int id top 0x7f0801eb

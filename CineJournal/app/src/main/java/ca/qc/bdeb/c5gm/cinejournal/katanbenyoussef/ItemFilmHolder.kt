@@ -17,6 +17,6 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         image = itemView.findViewById(R.id.filmImage)
         nom = itemView.findViewById(R.id.filmTitle)
         description = itemView.findViewById(R.id.filmDescription)
-        rate = itemView.findViewById(R.id.filmRating)
+        rate = itemView.findViewById(R.id.editFilmRating)
     }
 }

@@ -3077,6 +3077,7 @@ id action_text
 id actions
 id activity_chooser_view_content
 id add
+id ajouter
 id alertTitle
 id aligned
 id all
@@ -3084,7 +3085,6 @@ id allStates
 id always
 id animateToEnd
 id animateToStart
-id annee
 id antiClockwise
 id anticipate
 id arc
@@ -3105,7 +3105,6 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
-id button
 id button2
 id buttonPanel
 id cache_measures
@@ -3180,9 +3179,12 @@ id easeInOut
 id easeOut
 id east
 id edge
+id editTextText
 id editTextText2
 id editTextText3
 id editTextText4
+id editTextText5
+id editTextText6
 id edit_query
 id elastic
 id embed
@@ -3329,6 +3331,7 @@ id navigation_header_container
 id never
 id neverCompleteToEnd
 id neverCompleteToStart
+id noFilmText
 id noScroll
 id noState
 id none
@@ -3419,7 +3422,6 @@ id sin
 id skipCollapsed
 id skipped
 id slide
-id slogan
 id snackbar_action
 id snackbar_text
 id snap
@@ -3465,9 +3467,6 @@ id tag_window_insets_animation_callback
 id text
 id text2
 id textEnd
-id textInputLayout
-id textInputLayout2
-id textInputLayout3
 id textSpacerNoButtons
 id textSpacerNoTitle
 id textStart
@@ -3480,7 +3479,6 @@ id textView5
 id textView6
 id textView7
 id textView8
-id textView9
 id text_input_end_icon
 id text_input_error_icon
 id text_input_start_icon
@@ -3494,7 +3492,6 @@ id time
 id title
 id titleDividerNoCustom
 id title_template
-id titre
 id toggle
 id toolbar
 id top
