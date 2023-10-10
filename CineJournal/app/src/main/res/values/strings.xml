@@ -13,4 +13,7 @@
     <string name="tri_par_titre">Tri par titre</string>
     <string name="credits">Par Abderrahmane Katan et Salim Ben Youssef dans le cadre du cours 420-5GM-RE.</string>
     <string name="titre_film">Titre film</string>
+    <string name="trouver_un_film">Trouver un film</string>
+    <string name="titre_du_film">Titre du film</string>
+    <string name="rechercher">Rechercher</string>
 </resources>
