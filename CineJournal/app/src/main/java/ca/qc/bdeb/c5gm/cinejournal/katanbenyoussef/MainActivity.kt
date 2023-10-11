@@ -40,12 +40,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         val listeFilmss = ArrayList<ItemView>()
         listeFilmss.add(ItemView(R.drawable.logo_background, "Hi", "dsadsadsad", 2.0, 2013))
+
         val listeFilms = mutableListOf(
             ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 2.0, 2002),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.5, 2003),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 1.0, 2015),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 4.5, 2023)
+            ItemView(R.drawable.logo_background, "Hello world1", "blabla bal blabla", 3.5, 2003),
+            ItemView(R.drawable.logo_background, "Hello world3", "blabla bal blabla", 1.0, 2015),
+            ItemView(R.drawable.logo_background, "Hello world4", "blabla bal blabla", 4.5, 2023)
         )
+
+        listeFilmss.addAll(listeFilms)
         adapteur = AdapteurListeFilm(applicationContext, this, listeFilmss)
         recyclerView.adapter = adapteur
 

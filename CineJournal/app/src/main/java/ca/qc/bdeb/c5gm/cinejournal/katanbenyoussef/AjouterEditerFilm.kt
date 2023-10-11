@@ -1,5 +1,6 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -42,5 +43,8 @@ class AjouterEditerFilm : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+    fun sauvegarder(){
+        val intent: Intent = 
     }
 }
