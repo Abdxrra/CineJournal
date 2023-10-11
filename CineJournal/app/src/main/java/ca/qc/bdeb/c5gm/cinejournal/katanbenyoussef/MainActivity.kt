@@ -1,5 +1,6 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
+import android.app.Activity
 import android.content.ClipData.Item
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +25,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
+
+const val EXTRA_MODE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_MODE"
+const val EXTRA_TITRE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_TITRE"
+const val EXTRA_SLOGAN = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_SLOGAN"
+const val EXTRA_ANNEE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_ANNEE"
+const val EXTRA_NOTE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_NOTE"
+const val EXTRA_IMAGE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_IMAGE"
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,13 +63,31 @@ class MainActivity : AppCompatActivity() {
         adapteur = AdapteurListeFilm(applicationContext, this, listeFilmss)
         recyclerView.adapter = adapteur
 
+        val activityAjouter = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data?:Intent()
+                val extras = intent.extras
+                if (extras != null) {
+                    // faire la fonction pour ajouter un film
+                }
+            }
+        }
+
         var ajouterBtn: Button = findViewById(R.id.ajouter)
         ajouterBtn.setOnClickListener{
             val intent = Intent(applicationContext, AjouterEditerFilm::class.java)
-            intent.putExtra("Mode", "Ajouter");
-            startActivity(intent)
+            intent.putExtra(EXTRA_MODE, "Ajouter");
+            activityAjouter.launch(intent)
         }
 
+    }
+    fun ajouterFilm(v: View){
+
+
+
+        //startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -96,11 +125,6 @@ class MainActivity : AppCompatActivity() {
     suspend fun getClient() = withContext(Dispatchers.IO) {
         val dao = AppDatabase.getDatabase(applicationContext).clientDao()
         dao.findByName("abder", "katan")
-    }
-
-    fun ajouterFilm() {
-        // ajouter code pour ajouter un film dans la bd et la liste
-        updateRecyclerView()
     }
 
     fun updateRecyclerView(){
