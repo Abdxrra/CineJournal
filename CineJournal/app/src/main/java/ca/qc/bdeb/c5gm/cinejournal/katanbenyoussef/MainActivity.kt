@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,13 +38,15 @@ class MainActivity : AppCompatActivity() {
         noFilmText = findViewById(R.id.noFilmText)
 
         recyclerView = findViewById(R.id.recyclerView)
-        val listeFilms = listOf(
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.0),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.0),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.0),
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.0)
+        val listeFilmss = ArrayList<ItemView>()
+        listeFilmss.add(ItemView(R.drawable.logo_background, "Hi", "dsadsadsad", 2.0, 2013))
+        val listeFilms = mutableListOf(
+            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 2.0, 2002),
+            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 3.5, 2003),
+            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 1.0, 2015),
+            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 4.5, 2023)
         )
-        adapteur = AdapteurListeFilm(applicationContext, this, listeFilms)
+        adapteur = AdapteurListeFilm(applicationContext, this, listeFilmss)
         recyclerView.adapter = adapteur
 
         var ajouterBtn: Button = findViewById(R.id.ajouter)

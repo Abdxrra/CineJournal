@@ -15,12 +15,12 @@
 
         <TextView
             android:id="@+id/filmTitle"
-            android:layout_width="241dp"
-            android:layout_height="35dp"
+            android:layout_width="154dp"
+            android:layout_height="36dp"
             android:text="Titre"
-            android:textSize="24sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/filmDescription"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/filmAnnee"
             app:layout_constraintStart_toEndOf="@+id/filmImage"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,6 +53,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/filmImage"
             app:layout_constraintTop_toBottomOf="@+id/filmDescription" />
+
+        <TextView
+            android:id="@+id/filmAnnee"
+            android:layout_width="69dp"
+            android:layout_height="36dp"
+            android:text="Annee"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/filmDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/filmTitle"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
