@@ -13,11 +13,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
+import ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.EXTRA_MODE
 import ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.EXTRA_TITRE
 import ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.EXTRA_SLOGAN
 import ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.EXTRA_ANNEE
 import ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.EXTRA_NOTE
 import ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.EXTRA_IMAGE
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class AjouterEditerFilm : AppCompatActivity() {
@@ -49,7 +54,7 @@ class AjouterEditerFilm : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            val mode = extras.getString("Mode")
+            val mode = extras.getString(EXTRA_MODE)
             modeActivity.text = when (mode) {
                 "Edit" -> "Modifier un Film"
                 else -> "Nouveau un Film"
@@ -71,7 +76,43 @@ class AjouterEditerFilm : AppCompatActivity() {
         return true
     }
     fun sauvegarder(){
+        lifecycleScope.launch {
+            // Cette portion roule dans le thread IO
+            val liste = withContext(Dispatchers.IO) {
+                val dao = AppDatabase.getDatabase(applicationContext).clientDao()
 
+                val extras = intent.extras
+                if (extras != null) {
+                    if (extras.getString(EXTRA_MODE) == "Ajouter"){
+                        dao.insertAll(
+                            Film(
+                                null,
+                                editTitre.text.toString(),
+                                editSlogan.text.toString(),
+                                editAnnee.text.toString().toInt(),
+                                editFilmRating.rating.toDouble(),
+                                uriFilm
+                            )
+                        )
+                    }
+                    else {
+                        dao.updateAll(
+                            Film(
+                                null,
+                                editTitre.text.toString(),
+                                editSlogan.text.toString(),
+                                editAnnee.text.toString().toInt(),
+                                editFilmRating.rating.toDouble(),
+                                uriFilm
+                            )
+                        )
+                    }
+
+                }
+            }
+        }
+
+        /*
         val intentMsg = Intent()
         intentMsg.putExtra(EXTRA_TITRE, editTitre.text)
         intentMsg.putExtra(EXTRA_SLOGAN, editSlogan.text)
@@ -79,6 +120,7 @@ class AjouterEditerFilm : AppCompatActivity() {
         intentMsg.putExtra(EXTRA_NOTE, editFilmRating.rating)
         intentMsg.putExtra(EXTRA_IMAGE, uriFilm)
         setResult(RESULT_OK, intentMsg)
+         */
         finish()
     }
 }

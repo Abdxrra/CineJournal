@@ -29,9 +29,6 @@ interface ClientDao {
     @Update
     suspend fun updateAll(vararg films: Film)
 
-    @Update
-    suspend fun updateOne(vararg film: Film)
-
     @Delete
     suspend fun delete(film: Film)
 }
