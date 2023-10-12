@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RatingBar
@@ -75,52 +77,15 @@ class AjouterEditerFilm : AppCompatActivity() {
         onBackPressed()
         return true
     }
-    fun sauvegarder(){
-        lifecycleScope.launch {
-            // Cette portion roule dans le thread IO
-            val liste = withContext(Dispatchers.IO) {
-                val dao = AppDatabase.getDatabase(applicationContext).clientDao()
+    fun sauvegarder(v: View){
 
-                val extras = intent.extras
-                if (extras != null) {
-                    if (extras.getString(EXTRA_MODE) == "Ajouter"){
-                        dao.insertAll(
-                            Film(
-                                null,
-                                editTitre.text.toString(),
-                                editSlogan.text.toString(),
-                                editAnnee.text.toString().toInt(),
-                                editFilmRating.rating.toDouble(),
-                                uriFilm
-                            )
-                        )
-                    }
-                    else {
-                        dao.updateAll(
-                            Film(
-                                null,
-                                editTitre.text.toString(),
-                                editSlogan.text.toString(),
-                                editAnnee.text.toString().toInt(),
-                                editFilmRating.rating.toDouble(),
-                                uriFilm
-                            )
-                        )
-                    }
-
-                }
-            }
-        }
-
-        /*
         val intentMsg = Intent()
-        intentMsg.putExtra(EXTRA_TITRE, editTitre.text)
-        intentMsg.putExtra(EXTRA_SLOGAN, editSlogan.text)
-        intentMsg.putExtra(EXTRA_ANNEE, editAnnee.text)
-        intentMsg.putExtra(EXTRA_NOTE, editFilmRating.rating)
+        intentMsg.putExtra(EXTRA_TITRE, editTitre.text.toString())
+        intentMsg.putExtra(EXTRA_SLOGAN, editSlogan.text.toString())
+        intentMsg.putExtra(EXTRA_ANNEE, editAnnee.text.toString().toInt())
+        intentMsg.putExtra(EXTRA_NOTE, editFilmRating.rating.toDouble())
         intentMsg.putExtra(EXTRA_IMAGE, uriFilm)
         setResult(RESULT_OK, intentMsg)
-         */
         finish()
     }
 }

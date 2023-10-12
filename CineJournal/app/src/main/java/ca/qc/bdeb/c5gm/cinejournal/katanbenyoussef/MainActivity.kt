@@ -1,31 +1,24 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
 import android.app.Activity
-import android.content.ClipData.Item
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
-import android.widget.Adapter
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.RatingBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.ArrayList
 
 const val EXTRA_MODE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_MODE"
 const val EXTRA_TITRE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_TITRE"
@@ -57,8 +50,33 @@ class MainActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data?:Intent()
                 val extras = intent.extras
+
                 if (extras != null) {
-                    // faire la fonction pour ajouter un film
+                    val titre: String = extras.getString(EXTRA_TITRE)!!
+                    val description: String = extras.getString(EXTRA_SLOGAN)!!
+                    val annee: Int = extras.getInt(EXTRA_ANNEE)
+                    val rating: Double = extras.getDouble(EXTRA_NOTE)
+                    val imageUri: String = extras.getString(EXTRA_IMAGE)!!
+
+                    Log.d("main", titre)
+
+                    lifecycleScope.launch {
+                        val liste = withContext(Dispatchers.IO) {
+                            val dao = AppDatabase.getDatabase(applicationContext).clientDao()
+                            dao.insertAll(
+                                Film(
+                                    null,
+                                    titre,
+                                    description,
+                                    annee,
+                                    rating,
+                                    imageUri
+                                )
+                            )
+                        }
+                    }
+                    getFilms()
+
                 }
             }
         }
