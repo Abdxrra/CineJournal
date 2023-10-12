@@ -23,6 +23,9 @@ interface ClientDao {
     )
     suspend fun findByTitre(titre: String): Film
 
+    @Query("DELETE FROM Film")
+    suspend fun deleteAll()
+
     @Insert
     suspend fun insertAll(vararg films: Film)
 

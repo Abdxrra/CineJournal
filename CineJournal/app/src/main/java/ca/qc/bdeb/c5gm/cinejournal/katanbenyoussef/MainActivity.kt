@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     getFilms()
+                    updateRecyclerView()
 
                 }
             }
@@ -143,8 +144,14 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.toutSupprimer ->{
-                // ajouter le code pour update la liste et la BD
-                updateRecyclerView()
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        AppDatabase.getDatabase(applicationContext).clientDao().deleteAll()
+                        getFilms()
+                    }
+                    updateRecyclerView()
+                }
+
                 true
             }
 
@@ -154,8 +161,13 @@ class MainActivity : AppCompatActivity() {
 
     fun updateRecyclerView(){
         if(adapteur.itemCount != 0){
+            noFilmText.visibility = VISIBLE
+            recyclerView.visibility = INVISIBLE
+        }
+        if(adapteur.itemCount == 0){
             noFilmText.visibility = INVISIBLE
             recyclerView.visibility = VISIBLE
         }
+
     }
 }

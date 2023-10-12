@@ -54,6 +54,7 @@
         android:layout_marginStart="44dp"
         android:layout_marginTop="68dp"
         android:layout_marginBottom="27dp"
+        android:onClick="annuler"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:text="@string/annuler"

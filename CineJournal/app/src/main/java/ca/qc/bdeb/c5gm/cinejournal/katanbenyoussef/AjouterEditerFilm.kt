@@ -88,4 +88,8 @@ class AjouterEditerFilm : AppCompatActivity() {
         setResult(RESULT_OK, intentMsg)
         finish()
     }
+
+    fun annuler(v: View){
+        finish()
+    }
 }
