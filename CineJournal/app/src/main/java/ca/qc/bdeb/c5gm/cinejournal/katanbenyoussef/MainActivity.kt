@@ -5,6 +5,7 @@ import android.content.ClipData.Item
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -49,18 +50,11 @@ class MainActivity : AppCompatActivity() {
         noFilmText = findViewById(R.id.noFilmText)
 
         recyclerView = findViewById(R.id.recyclerView)
-        val listeFilmss = ArrayList<ItemView>()
-        listeFilmss.add(ItemView(R.drawable.logo_background, "Hi", "dsadsadsad", 2.0, 2013))
+        var listeFilms = ArrayList<ItemView>()
+        getFilms()
+        Log.d("films2", listeFilms.toString())
 
-        val listeFilms = mutableListOf(
-            ItemView(R.drawable.logo_background, "Hello world", "blabla bal blabla", 2.0, 2002),
-            ItemView(R.drawable.logo_background, "Hello world1", "blabla bal blabla", 3.5, 2003),
-            ItemView(R.drawable.logo_background, "Hello world3", "blabla bal blabla", 1.0, 2015),
-            ItemView(R.drawable.logo_background, "Hello world4", "blabla bal blabla", 4.5, 2023)
-        )
-
-        listeFilmss.addAll(listeFilms)
-        adapteur = AdapteurListeFilm(applicationContext, this, listeFilmss)
+        adapteur = AdapteurListeFilm(applicationContext, this, listeFilms)
         recyclerView.adapter = adapteur
 
         val activityAjouter = registerForActivityResult(
@@ -83,11 +77,37 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    fun ajouterFilm(v: View){
 
+    fun getFilms(){
 
+        var listeFilms = ArrayList<ItemView>()
 
-        //startActivity(intent)
+        lifecycleScope.launch {
+            val films = withContext(Dispatchers.IO) {
+                AppDatabase.getDatabase(applicationContext).clientDao().getAll()
+            }
+
+            val transformToItemView: (Film) -> ItemView = {ItemView( it.titre, it.description, it.annee, it.rating, it.imageUri)}
+            listeFilms.addAll(films.map( transformToItemView ))
+
+        }
+        Log.d("films", listeFilms.toString())
+    }
+
+    fun addFilms(){
+        lifecycleScope.launch {
+            // Cette portion roule dans le thread IO
+            val liste = withContext(Dispatchers.IO) {
+                val dao = AppDatabase.getDatabase(applicationContext).clientDao()
+
+                dao.insertAll(Film(null, "test", "test", 2000, 2.0, ""))
+                dao.insertAll(Film(null, "test1", "test", 2000, 2.0, ""))
+                dao.insertAll(Film(null, "test2", "test", 2000, 2.0, ""))
+                dao.insertAll(Film(null, "test3", "test", 2000, 2.0, ""))
+                dao.insertAll(Film(null, "test4", "test", 2000, 2.0, ""))
+
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -115,16 +135,6 @@ class MainActivity : AppCompatActivity() {
 
             else -> false
         }
-    }
-
-    suspend fun insererClient(nouveauClient: Client) = withContext(Dispatchers.IO) {
-        val dao = AppDatabase.getDatabase(applicationContext).clientDao()
-        dao.insertAll(nouveauClient)
-    }
-
-    suspend fun getClient() = withContext(Dispatchers.IO) {
-        val dao = AppDatabase.getDatabase(applicationContext).clientDao()
-        dao.findByName("abder", "katan")
     }
 
     fun updateRecyclerView(){
