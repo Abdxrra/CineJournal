@@ -3,6 +3,7 @@ package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 
 class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -23,7 +24,12 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     fun bind(item: ItemView) {
-        image.setImageResource(item.image)
+        if(item.image != ""){
+            image.setImageURI(item.image.toUri())
+        }
+        else{
+            image.setImageResource(R.drawable.logo_background)
+        }
         nom.text = item.titre
         description.text = item.description
         rate.rating = item.rating.toFloat()
