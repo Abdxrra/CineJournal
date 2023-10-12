@@ -49,13 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         noFilmText = findViewById(R.id.noFilmText)
 
-        recyclerView = findViewById(R.id.recyclerView)
-        var listeFilms = ArrayList<ItemView>()
         getFilms()
-        Log.d("films2", listeFilms.toString())
-
-        adapteur = AdapteurListeFilm(applicationContext, this, listeFilms)
-        recyclerView.adapter = adapteur
 
         val activityAjouter = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -90,8 +84,11 @@ class MainActivity : AppCompatActivity() {
             val transformToItemView: (Film) -> ItemView = {ItemView( it.titre, it.description, it.annee, it.rating, it.imageUri)}
             listeFilms.addAll(films.map( transformToItemView ))
 
+            recyclerView = findViewById(R.id.recyclerView)
+            adapteur = AdapteurListeFilm(applicationContext, MainActivity(), listeFilms)
+            recyclerView.adapter = adapteur
+
         }
-        Log.d("films", listeFilms.toString())
     }
 
     fun addFilms(){
