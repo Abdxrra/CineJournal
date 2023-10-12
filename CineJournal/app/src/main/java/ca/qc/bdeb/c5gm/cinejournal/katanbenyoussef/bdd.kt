@@ -4,38 +4,39 @@ import android.content.Context
 import androidx.room.*
 
 @Entity
-data class Client(
+data class Film(
     @PrimaryKey(autoGenerate = true) val uid: Int?,
-    val prenom: String?,
-    val nom: String?,
-    val telephone: String?
+    val titre: String,
+    val description: String,
+    val annee: Int,
+    val rating: Double,
+    val imageUri: String
 )
 
 @Dao
 interface ClientDao {
-    @Query("SELECT * FROM Client")
-    suspend fun getAll(): List<Client>
-
-    @Query("SELECT * FROM Client WHERE uid IN (:userIds)")
-    suspend fun loadAllByIds(userIds: IntArray): List<Client>
+    @Query("SELECT * FROM Film")
+    suspend fun getAll(): List<Film>
 
     @Query(
-        "SELECT * FROM Client WHERE prenom LIKE :prenom AND " +
-                "nom LIKE :nom LIMIT 1"
+        "SELECT * FROM Film WHERE titre LIKE :titre LIMIT 1"
     )
-    suspend fun findByName(prenom: String, nom: String): Client
+    suspend fun findByTitre(titre: String): Film
 
     @Insert
-    suspend fun insertAll(vararg clients: Client)
+    suspend fun insertAll(vararg films: Film)
 
     @Update
-    suspend fun updateAll(vararg clients: Client)
+    suspend fun updateAll(vararg films: Film)
+
+    @Update
+    suspend fun updateOne(vararg film: Film)
 
     @Delete
-    suspend fun delete(client: Client)
+    suspend fun delete(film: Film)
 }
 
-@Database(entities = [Client::class], version = 1)
+@Database(entities = [Film::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun clientDao(): ClientDao
 
