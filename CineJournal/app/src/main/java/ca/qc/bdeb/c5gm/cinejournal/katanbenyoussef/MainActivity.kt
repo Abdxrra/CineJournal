@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var adapteur: AdapteurListeFilm
     lateinit var noFilmText: TextView
     lateinit var activityModifier: ActivityResultLauncher<Intent>
+    lateinit var trierView: TextView
     val transformToItemView: (Film) -> ItemView = { ItemView(it.uid!!, it.titre, it.description, it.annee, it.rating, it.imageUri) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
