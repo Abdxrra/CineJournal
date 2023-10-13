@@ -1,5 +1,7 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
+import android.net.Uri
+
 
 data class ItemView(
     val titre: String,
