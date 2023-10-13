@@ -11,6 +11,8 @@
     <string name="mes_films">Mes films</string>
     <string name="ajouter">Ajouter</string>
     <string name="tri_par_titre">Tri par titre</string>
+    <string name="tri_par_annee">Tri par année</string>
+    <string name="tri_par_note">Tri par note</string>
     <string name="credits">Par Abderrahmane Katan et Salim Ben Youssef dans le cadre du cours 420-5GM-RE.</string>
     <string name="titre_film">Titre film</string>
     <string name="trouver_un_film">Trouver un film</string>

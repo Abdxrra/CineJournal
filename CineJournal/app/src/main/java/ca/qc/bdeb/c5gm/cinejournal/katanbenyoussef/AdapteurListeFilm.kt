@@ -28,11 +28,12 @@ class AdapteurListeFilm(
         holder.layout.setOnClickListener {onclick(item)}
     }
 
-    fun addAllFilms(films: ArrayList<ItemView>){
+    fun addAllFilms(films: ArrayList<ItemView>) {
         this.data = films
         notifyDataSetChanged()
     }
-    fun addFilm(film: ItemView){
+
+    fun addFilm(film: ItemView) {
         this.data.add(film)
         notifyItemInserted(this.data.size - 1)
     }

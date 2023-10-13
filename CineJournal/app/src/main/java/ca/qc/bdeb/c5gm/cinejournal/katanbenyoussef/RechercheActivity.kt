@@ -15,6 +15,7 @@ class RechercheActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Rechercher un film"
     }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
