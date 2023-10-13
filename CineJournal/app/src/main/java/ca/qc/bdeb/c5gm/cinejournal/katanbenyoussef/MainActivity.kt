@@ -42,7 +42,11 @@ class MainActivity : AppCompatActivity() {
 
         noFilmText = findViewById(R.id.noFilmText)
 
-        getFilms()
+        recyclerView = findViewById(R.id.recyclerView)
+        adapteur = AdapteurListeFilm(applicationContext, MainActivity(), ArrayList<ItemView>())
+        recyclerView.adapter = adapteur
+
+        addFilmsToView()
 
         val activityAjouter = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -61,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("main", titre)
 
                     lifecycleScope.launch {
-                        val liste = withContext(Dispatchers.IO) {
+                        withContext(Dispatchers.IO) {
                             val dao = AppDatabase.getDatabase(applicationContext).clientDao()
                             dao.insertAll(
                                 Film(
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
-                    getFilms()
+                    adapteur.addFilm(ItemView(titre, description, annee, rating, imageUri))
                     updateRecyclerView()
 
                 }
@@ -91,9 +95,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun getFilms(){
-
-        var listeFilms = ArrayList<ItemView>()
+    fun addFilmsToView(){
 
         lifecycleScope.launch {
             val films = withContext(Dispatchers.IO) {
@@ -101,12 +103,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             val transformToItemView: (Film) -> ItemView = {ItemView( it.titre, it.description, it.annee, it.rating, it.imageUri)}
-            listeFilms.addAll(films.map( transformToItemView ))
+            adapteur.addAllFilms(films.map( transformToItemView ) as ArrayList<ItemView>)
 
-            recyclerView = findViewById(R.id.recyclerView)
-            adapteur = AdapteurListeFilm(applicationContext, MainActivity(), listeFilms)
-            recyclerView.adapter = adapteur
-
+            updateRecyclerView()
         }
     }
 
@@ -144,10 +143,12 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.toutSupprimer ->{
+
+                adapteur.deleteAllFilms()
+
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         AppDatabase.getDatabase(applicationContext).clientDao().deleteAll()
-                        getFilms()
                     }
                     updateRecyclerView()
                 }
@@ -161,12 +162,12 @@ class MainActivity : AppCompatActivity() {
 
     fun updateRecyclerView(){
         if(adapteur.itemCount != 0){
-            noFilmText.visibility = VISIBLE
-            recyclerView.visibility = INVISIBLE
-        }
-        if(adapteur.itemCount == 0){
             noFilmText.visibility = INVISIBLE
             recyclerView.visibility = VISIBLE
+        }
+        if(adapteur.itemCount == 0){
+            noFilmText.visibility = VISIBLE
+            recyclerView.visibility = INVISIBLE
         }
 
     }
