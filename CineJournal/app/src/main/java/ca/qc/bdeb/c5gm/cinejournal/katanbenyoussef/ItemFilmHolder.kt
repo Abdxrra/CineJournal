@@ -1,5 +1,6 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
+import android.net.Uri
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +29,7 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             image.setImageURI(item.image.toUri())
         }
         else{
-            image.setImageResource(R.drawable.logo_background)
+            image.setImageResource(R.drawable.defaultimage)
         }
         nom.text = item.titre
         description.text = item.description
