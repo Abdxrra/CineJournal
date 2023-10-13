@@ -21,4 +21,20 @@ class AdapteurListeFilm(
         val item = data[position]
         holder.bind(item)
     }
+
+    fun addAllFilms(films: ArrayList<ItemView>){
+        this.data = films
+        notifyDataSetChanged()
+    }
+    fun addFilm(film: ItemView){
+        this.data.add(film)
+        notifyItemInserted(this.data.size - 1)
+    }
+
+
+
+    fun deleteAllFilms(){
+        this.data.clear()
+        notifyDataSetChanged()
+    }
 }
