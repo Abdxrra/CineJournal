@@ -25,13 +25,13 @@ interface ClientDao {
     suspend fun deleteAll()
 
     @Query("SELECT * FROM Film ORDER BY titre")
-    suspend fun trierParTitre()
+    suspend fun trierParTitre(): List<Film>
 
     @Query("SELECT * FROM Film ORDER BY annee")
     suspend fun trierParAnnee(): List<Film>
 
     @Query("SELECT * FROM Film ORDER BY rating")
-    suspend fun trierParNote()
+    suspend fun trierParNote(): List<Film>
 
     @Insert
     suspend fun insertAll(vararg films: Film)
