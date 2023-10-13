@@ -18,13 +18,20 @@ interface ClientDao {
     @Query("SELECT * FROM Film")
     suspend fun getAll(): List<Film>
 
-    @Query(
-        "SELECT * FROM Film WHERE titre LIKE :titre LIMIT 1"
-    )
+    @Query("SELECT * FROM Film WHERE titre LIKE :titre LIMIT 1")
     suspend fun findByTitre(titre: String): Film
 
     @Query("DELETE FROM Film")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM Film ORDER BY titre")
+    suspend fun trierParTitre()
+
+    @Query("SELECT * FROM Film ORDER BY annee")
+    suspend fun trierParAnnee(): List<Film>
+
+    @Query("SELECT * FROM Film ORDER BY rating")
+    suspend fun trierParNote()
 
     @Insert
     suspend fun insertAll(vararg films: Film)

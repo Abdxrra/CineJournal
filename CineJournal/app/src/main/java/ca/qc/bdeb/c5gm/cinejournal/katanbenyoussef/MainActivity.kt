@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val intent = result.data?:Intent()
+                val intent = result.data ?: Intent()
                 val extras = intent.extras
 
                 if (extras != null) {
@@ -83,15 +83,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         var ajouterBtn: Button = findViewById(R.id.ajouter)
-        ajouterBtn.setOnClickListener{
+        ajouterBtn.setOnClickListener {
             val intent = Intent(applicationContext, AjouterEditerFilm::class.java)
-            intent.putExtra(EXTRA_MODE, "Ajouter");
+            intent.putExtra(EXTRA_MODE, "Ajouter")
             activityAjouter.launch(intent)
         }
 
     }
 
-    fun getFilms(){
+    fun getFilms() {
 
         var listeFilms = ArrayList<ItemView>()
 
@@ -100,8 +100,9 @@ class MainActivity : AppCompatActivity() {
                 AppDatabase.getDatabase(applicationContext).clientDao().getAll()
             }
 
-            val transformToItemView: (Film) -> ItemView = {ItemView( it.titre, it.description, it.annee, it.rating, it.imageUri)}
-            listeFilms.addAll(films.map( transformToItemView ))
+            val transformToItemView: (Film) -> ItemView =
+                { ItemView(it.titre, it.description, it.annee, it.rating, it.imageUri) }
+            listeFilms.addAll(films.map(transformToItemView))
 
             recyclerView = findViewById(R.id.recyclerView)
             adapteur = AdapteurListeFilm(applicationContext, MainActivity(), listeFilms)
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun addFilms(){
+    fun addFilms() {
         lifecycleScope.launch {
             // Cette portion roule dans le thread IO
             val liste = withContext(Dispatchers.IO) {
@@ -138,12 +139,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
-            R.id.trouverFilm ->{
+
+            R.id.trouverFilm -> {
                 val intent = Intent(applicationContext, RechercheActivity::class.java)
                 startActivity(intent)
                 true
             }
-            R.id.toutSupprimer ->{
+
+            R.id.toutSupprimer -> {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         AppDatabase.getDatabase(applicationContext).clientDao().deleteAll()
@@ -151,7 +154,17 @@ class MainActivity : AppCompatActivity() {
                     }
                     updateRecyclerView()
                 }
+                true
+            }
 
+            R.id.trierAnnee -> {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        AppDatabase.getDatabase(applicationContext).clientDao().trierParAnnee()
+                        getFilms()
+                    }
+                    updateRecyclerView()
+                }
                 true
             }
 
@@ -159,12 +172,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun updateRecyclerView(){
-        if(adapteur.itemCount != 0){
+    fun updateRecyclerView() {
+        if (adapteur.itemCount != 0) {
             noFilmText.visibility = VISIBLE
             recyclerView.visibility = INVISIBLE
         }
-        if(adapteur.itemCount == 0){
+        if (adapteur.itemCount == 0) {
             noFilmText.visibility = INVISIBLE
             recyclerView.visibility = VISIBLE
         }
