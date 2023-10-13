@@ -16,6 +16,7 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val annee: TextView
 
     init {
+
         layout = itemView as ConstraintLayout
         image = itemView.findViewById(R.id.filmImage)
         nom = itemView.findViewById(R.id.filmTitle)
@@ -35,5 +36,9 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         description.text = item.description
         rate.rating = item.rating.toFloat()
         annee.text = item.annee.toString()
+        layout.setOnClickListener{
+
+        }
+
     }
 }

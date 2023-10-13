@@ -2,7 +2,6 @@ package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -12,10 +11,10 @@ import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +27,7 @@ const val EXTRA_SLOGAN = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_SLOGAN"
 const val EXTRA_ANNEE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_ANNEE"
 const val EXTRA_NOTE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_NOTE"
 const val EXTRA_IMAGE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_IMAGE"
+const val EXTRA_UID = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_UID"
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var adapteur: AdapteurListeFilm
     lateinit var noFilmText: TextView
-    val transformToItemView: (Film) -> ItemView = { ItemView(it.titre, it.description, it.annee, it.rating, it.imageUri) }
+    lateinit var activityModifier: ActivityResultLauncher<Intent>
+    val transformToItemView: (Film) -> ItemView = { ItemView(it.uid!!, it.titre, it.description, it.annee, it.rating, it.imageUri) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         noFilmText = findViewById(R.id.noFilmText)
 
         recyclerView = findViewById(R.id.recyclerView)
-        adapteur = AdapteurListeFilm(applicationContext, MainActivity(), ArrayList<ItemView>())
+        adapteur = AdapteurListeFilm(applicationContext, MainActivity(), ArrayList<ItemView>(), {ItemView -> adapterOnclick(ItemView)})
         recyclerView.adapter = adapteur
 
         addFilmsToView()
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                 val extras = intent.extras
 
                 if (extras != null) {
+
                     val titre: String = extras.getString(EXTRA_TITRE)!!
                     val description: String = extras.getString(EXTRA_SLOGAN)!!
                     val annee: Int = extras.getInt(EXTRA_ANNEE)
@@ -68,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("main", titre)
 
                     lifecycleScope.launch {
-                        withContext(Dispatchers.IO) {
+                        val uid = withContext(Dispatchers.IO) {
                             val dao = AppDatabase.getDatabase(applicationContext).clientDao()
                             dao.insertAll(
                                 Film(
@@ -81,8 +83,48 @@ class MainActivity : AppCompatActivity() {
                                 )
                             )
                         }
+                        adapteur.addFilm(ItemView(uid.toInt(), titre, description, annee, rating, imageUri))
                     }
-                    adapteur.addFilm(ItemView(titre, description, annee, rating, imageUri))
+                    updateRecyclerView()
+
+                }
+            }
+        }
+
+        activityModifier = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data ?: Intent()
+                val extras = intent.extras
+
+                if (extras != null) {
+                    val uid: Int = extras.getInt(EXTRA_UID)!!
+                    val titre: String = extras.getString(EXTRA_TITRE)!!
+                    val description: String = extras.getString(EXTRA_SLOGAN)!!
+                    val annee: Int = extras.getInt(EXTRA_ANNEE)
+                    val rating: Double = extras.getDouble(EXTRA_NOTE)
+                    val imageUri: String = extras.getString(EXTRA_IMAGE)!!
+
+                    Log.d("main", titre)
+
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            val dao = AppDatabase.getDatabase(applicationContext).clientDao()
+                            dao.updateAll(
+                                Film(
+                                    uid,
+                                    titre,
+                                    description,
+                                    annee,
+                                    rating,
+                                    imageUri
+                                )
+                            )
+                        }
+                    }
+                    Log.d("testest", uid.toString())
+                    adapteur.updateFilm(ItemView(uid, titre, description, annee, rating, imageUri))
                     updateRecyclerView()
 
                 }
@@ -98,6 +140,24 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun adapterOnclick(itemView: ItemView) {
+
+        //var ajouterBtn: Button = findViewById(R.id.ajouter)
+        //ajouterBtn.setOnClickListener {
+        Log.d("testest", itemView.uid.toString())
+        val intentMsg = Intent(applicationContext, AjouterEditerFilm::class.java)
+        intentMsg.putExtra(EXTRA_MODE, "Edit")
+        intentMsg.putExtra(EXTRA_UID, itemView.uid)
+        intentMsg.putExtra(EXTRA_TITRE, itemView.titre)
+        intentMsg.putExtra(EXTRA_SLOGAN, itemView.description)
+        intentMsg.putExtra(EXTRA_ANNEE, itemView.annee)
+        intentMsg.putExtra(EXTRA_NOTE, itemView.rating)
+        intentMsg.putExtra(EXTRA_IMAGE, itemView.image)
+
+        activityModifier.launch(intentMsg)
+        //}
+    }
+
     fun addFilmsToView() {
 
         lifecycleScope.launch {
@@ -106,7 +166,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val transformToItemView: (Film) -> ItemView =
-                { ItemView(it.titre, it.description, it.annee, it.rating, it.imageUri) }
+                { ItemView(it.uid!!, it.titre, it.description, it.annee, it.rating, it.imageUri) }
             adapteur.addAllFilms(films.map(transformToItemView) as ArrayList<ItemView>)
 
             updateRecyclerView()

@@ -34,7 +34,7 @@ interface ClientDao {
     suspend fun trierParNote(): List<Film>
 
     @Insert
-    suspend fun insertAll(vararg films: Film)
+    suspend fun insertAll(film: Film): Long
 
     @Update
     suspend fun updateAll(vararg films: Film)
