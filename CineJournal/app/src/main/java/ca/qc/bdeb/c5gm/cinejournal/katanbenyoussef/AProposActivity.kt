@@ -16,6 +16,7 @@ class AProposActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "À propos"
     }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

@@ -1,11 +1,13 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
 import android.app.Activity
+import android.content.ClipData.Item
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.w3c.dom.Text
 
 const val EXTRA_MODE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_MODE"
 const val EXTRA_TITRE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_TITRE"
@@ -33,7 +36,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var adapteur: AdapteurListeFilm
     lateinit var noFilmText: TextView
-    val transformToItemView: (Film) -> ItemView = { ItemView(it.titre, it.description, it.annee, it.rating, it.imageUri) }
+    lateinit var trierView: TextView
+    val transformToItemView: (Film) -> ItemView =
+        { ItemView(it.titre, it.description, it.annee, it.rating, it.imageUri) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         noFilmText = findViewById(R.id.noFilmText)
-
+        trierView = findViewById(R.id.trierMode)
         recyclerView = findViewById(R.id.recyclerView)
         adapteur = AdapteurListeFilm(applicationContext, MainActivity(), ArrayList<ItemView>())
         recyclerView.adapter = adapteur
@@ -111,92 +117,68 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun addFilms() {
-        lifecycleScope.launch {
-            // Cette portion roule dans le thread IO
-            val liste = withContext(Dispatchers.IO) {
-                val dao = AppDatabase.getDatabase(applicationContext).clientDao()
-
-                dao.insertAll(Film(null, "test", "test", 2000, 2.0, ""))
-                dao.insertAll(Film(null, "test1", "test", 2000, 2.0, ""))
-                dao.insertAll(Film(null, "test2", "test", 2000, 2.0, ""))
-                dao.insertAll(Film(null, "test3", "test", 2000, 2.0, ""))
-                dao.insertAll(Film(null, "test4", "test", 2000, 2.0, ""))
-
-            }
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        when (item.itemId) {
             R.id.aPropos -> {
                 val intent = Intent(applicationContext, AProposActivity::class.java)
                 startActivity(intent)
-                true
             }
 
             R.id.trouverFilm -> {
                 val intent = Intent(applicationContext, RechercheActivity::class.java)
                 startActivity(intent)
-                true
             }
 
             R.id.toutSupprimer -> {
-
-                adapteur.deleteAllFilms()
-
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        AppDatabase.getDatabase(applicationContext).clientDao().deleteAll()
-                    }
-                    updateRecyclerView()
-                }
-                true
+                deleteAllFilms()
+                updateRecyclerView()
             }
 
             R.id.trierAnnee -> {
-                lifecycleScope.launch {
-                    var listeTrie = withContext(Dispatchers.IO) {
-                        AppDatabase.getDatabase(applicationContext).clientDao().trierParAnnee()
-                    }
-
-                    adapteur.addAllFilms(listeTrie.map(transformToItemView) as ArrayList<ItemView>)
-
-                    updateRecyclerView()
+                trierView.setText(R.string.tri_par_annee)
+                trierFilms {
+                    AppDatabase.getDatabase(applicationContext).clientDao().trierParAnnee()
                 }
-                true
             }
+
             R.id.trierNote -> {
-                lifecycleScope.launch {
-                    var listeTrie = withContext(Dispatchers.IO) {
-                        AppDatabase.getDatabase(applicationContext).clientDao().trierParNote()
-                    }
-
-                    adapteur.addAllFilms(listeTrie.map(transformToItemView) as ArrayList<ItemView>)
-
-                    updateRecyclerView()
+                trierView.setText(R.string.tri_par_note)
+                trierFilms {
+                    AppDatabase.getDatabase(applicationContext).clientDao().trierParNote()
                 }
-                true
             }
+
             R.id.trierTitre -> {
-                lifecycleScope.launch {
-                    var listeTrie = withContext(Dispatchers.IO) {
-                        AppDatabase.getDatabase(applicationContext).clientDao().trierParTitre()
-                    }
-
-                    adapteur.addAllFilms(listeTrie.map(transformToItemView) as ArrayList<ItemView>)
-
-                    updateRecyclerView()
+                trierView.setText(R.string.tri_par_titre)
+                trierFilms {
+                    AppDatabase.getDatabase(applicationContext).clientDao().trierParTitre()
                 }
-                true
             }
 
             else -> false
+        }
+        return true
+    }
+
+    fun trierFilms(trierFunction: suspend () -> List<Film>) {
+        lifecycleScope.launch {
+            val listeTrie = withContext(Dispatchers.IO) { trierFunction() }
+            adapteur.addAllFilms(listeTrie.map(transformToItemView) as ArrayList<ItemView>)
+            updateRecyclerView()
+        }
+    }
+
+    fun deleteAllFilms() {
+        adapteur.deleteAllFilms()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                AppDatabase.getDatabase(applicationContext).clientDao().deleteAll()
+            }
         }
     }
 

@@ -24,10 +24,9 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     fun bind(item: ItemView) {
-        if(item.image != ""){
+        if (item.image != "") {
             image.setImageURI(item.image.toUri())
-        }
-        else{
+        } else {
             image.setImageResource(R.drawable.logo_background)
         }
         nom.text = item.titre

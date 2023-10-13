@@ -64,7 +64,7 @@ class AjouterEditerFilm : AppCompatActivity() {
                 else -> "Nouveau un Film"
             }
 
-            if(extras.containsKey("Titre")){
+            if (extras.containsKey("Titre")) {
                 editTitre.setText(extras.getString(EXTRA_TITRE))
                 editSlogan.setText(extras.getString(EXTRA_SLOGAN))
                 editAnnee.setText(extras.getString(EXTRA_ANNEE))
@@ -75,16 +75,20 @@ class AjouterEditerFilm : AppCompatActivity() {
         }
 
     }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-    fun sauvegarder(v: View){
-        if(TextUtils.isEmpty(editTitre.text)){
-            Toast.makeText(applicationContext, "Le titre est obligatoire !", Toast.LENGTH_SHORT).show()
+
+    fun sauvegarder(v: View) {
+        if (TextUtils.isEmpty(editTitre.text)) {
+            Toast.makeText(applicationContext, "Le titre est obligatoire !", Toast.LENGTH_SHORT)
+                .show()
         }
-        if(TextUtils.isEmpty(editAnnee.text)){
-            Toast.makeText(applicationContext, "L'année est obligatoire !", Toast.LENGTH_SHORT).show()
+        if (TextUtils.isEmpty(editAnnee.text)) {
+            Toast.makeText(applicationContext, "L'année est obligatoire !", Toast.LENGTH_SHORT)
+                .show()
         }
 
 
@@ -98,7 +102,7 @@ class AjouterEditerFilm : AppCompatActivity() {
         finish()
     }
 
-    fun annuler(v: View){
+    fun annuler(v: View) {
         finish()
     }
 }
