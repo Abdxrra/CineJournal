@@ -33,7 +33,7 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         nom.text = item.titre
         description.text = item.description
         rate.rating = item.rating.toFloat()
-        annee.text = "(${item.annee.toString()})"
+        annee.text = item.annee.toString()
         layout.setOnClickListener{
 
         }

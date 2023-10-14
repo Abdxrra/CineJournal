@@ -1,6 +1,7 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -35,22 +36,20 @@ class AdapteurListeFilm(
 
     fun addFilm(film: ItemView) {
         this.data.add(film)
-        notifyItemInserted(this.data.size - 1)
+        notifyDataSetChanged()
+
     }
 
     fun updateFilm(film: ItemView){
-        var index: Int = 0
         for (f in data) {
             if(f.uid == film.uid){
-                index = this.data.indexOf(f)
+                val index = this.data.indexOf(f)
+                this.data[index] = film
+                break
             }
         }
 
-        this.data.removeAt(index)
-        notifyItemRemoved(index)
-
-        this.data.add(film)
-        notifyItemInserted(this.data.size - 1)
+        notifyDataSetChanged()
     }
 
     fun deleteAllFilms(){

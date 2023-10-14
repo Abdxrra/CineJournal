@@ -82,12 +82,11 @@ class AjouterEditerFilm : AppCompatActivity() {
             val mode = extras.getString(EXTRA_MODE)
             modeActivity.text = when (mode) {
                 "Edit" -> {
+                    uid = extras.getInt(EXTRA_UID)
                     editTitre.setText(extras.getString(EXTRA_TITRE))
                     editSlogan.setText(extras.getString(EXTRA_SLOGAN))
-                    editAnnee.setText(extras.getString(EXTRA_ANNEE))
-                    //BUG ICI |
-                    //        V
-                    //editFilmRating.rating = (extras.getString(EXTRA_NOTE)!!.toFloat())
+                    editAnnee.setText(extras.getInt(EXTRA_ANNEE).toString())
+                    editFilmRating.rating = extras.getDouble(EXTRA_NOTE).toFloat()
                     uriFilm = extras.getString(EXTRA_IMAGE)!!.toString()
                     editFilmImage.setImageURI(uriFilm.toUri())
                     "Modifier un Film"
@@ -123,6 +122,7 @@ class AjouterEditerFilm : AppCompatActivity() {
                 .show()
         } else {
             val intentMsg = Intent()
+            intentMsg.putExtra(EXTRA_UID, uid)
             intentMsg.putExtra(EXTRA_TITRE, editTitre.text.toString())
             intentMsg.putExtra(EXTRA_SLOGAN, editSlogan.text.toString())
             intentMsg.putExtra(EXTRA_ANNEE, editAnnee.text.toString().toInt())

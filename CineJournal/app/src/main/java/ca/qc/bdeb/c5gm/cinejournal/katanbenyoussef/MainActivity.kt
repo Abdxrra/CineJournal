@@ -102,8 +102,8 @@ class MainActivity : AppCompatActivity() {
                                 imageUri
                             )
                         )
+                        updateRecyclerView()
                     }
-                    updateRecyclerView()
 
                 }
             }
@@ -126,10 +126,12 @@ class MainActivity : AppCompatActivity() {
 
                     Log.d("main", titre)
 
+
                     lifecycleScope.launch {
                         withContext(Dispatchers.IO) {
                             val dao = AppDatabase.getDatabase(applicationContext).clientDao()
-                            dao.updateAll(
+                            Log.d("test", "$uid $titre $description $annee $rating $imageUri")
+                            val d = dao.updateAll(
                                 Film(
                                     uid,
                                     titre,
@@ -139,9 +141,10 @@ class MainActivity : AppCompatActivity() {
                                     imageUri
                                 )
                             )
+                            Log.d("testest", d.toString())
+
                         }
                     }
-                    Log.d("testest", uid.toString())
                     adapteur.updateFilm(ItemView(uid, titre, description, annee, rating, imageUri))
                     updateRecyclerView()
 
