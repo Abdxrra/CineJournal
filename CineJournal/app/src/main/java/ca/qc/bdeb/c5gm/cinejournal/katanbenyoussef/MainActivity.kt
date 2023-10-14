@@ -1,13 +1,12 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
 import android.app.Activity
-import android.content.ClipData.Item
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.w3c.dom.Text
 
 const val EXTRA_MODE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_MODE"
 const val EXTRA_TITRE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_TITRE"
@@ -40,7 +38,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var noFilmText: TextView
     lateinit var activityModifier: ActivityResultLauncher<Intent>
     lateinit var trierView: TextView
-    val transformToItemView: (Film) -> ItemView = { ItemView(it.uid!!, it.titre, it.description, it.annee, it.rating, it.imageUri) }
+    val transformToItemView: (Film) -> ItemView =
+        { ItemView(it.uid!!, it.titre, it.description, it.annee, it.rating, it.imageUri) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,9 +51,14 @@ class MainActivity : AppCompatActivity() {
         noFilmText = findViewById(R.id.noFilmText)
         trierView = findViewById(R.id.trierMode)
         recyclerView = findViewById(R.id.recyclerView)
-        adapteur = AdapteurListeFilm(applicationContext, MainActivity(), ArrayList<ItemView>(), {ItemView -> adapterOnclick(ItemView)})
+        adapteur = AdapteurListeFilm(
+            applicationContext,
+            MainActivity(),
+            ArrayList<ItemView>(),
+            { ItemView -> adapterOnclick(ItemView) })
         recyclerView.adapter = adapteur
 
+        triPreference()
         addFilmsToView()
 
         val activityAjouter = registerForActivityResult(
@@ -87,7 +92,16 @@ class MainActivity : AppCompatActivity() {
                                 )
                             )
                         }
-                        adapteur.addFilm(ItemView(uid.toInt(), titre, description, annee, rating, imageUri))
+                        adapteur.addFilm(
+                            ItemView(
+                                uid.toInt(),
+                                titre,
+                                description,
+                                annee,
+                                rating,
+                                imageUri
+                            )
+                        )
                     }
                     updateRecyclerView()
 
@@ -141,8 +155,8 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_MODE, "Ajouter")
             activityAjouter.launch(intent)
         }
-
     }
+
 
     private fun adapterOnclick(itemView: ItemView) {
 
@@ -163,7 +177,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addFilmsToView() {
-
         lifecycleScope.launch {
             val films = withContext(Dispatchers.IO) {
                 AppDatabase.getDatabase(applicationContext).clientDao().getAll()
@@ -182,6 +195,26 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    fun dialogDeConfirmation() {
+        val alert = AlertDialog.Builder(this)
+
+        alert.setTitle("Confirmation")
+        alert.setMessage("Êtes-vous sûr de vouloir tout supprimer?")
+
+        alert.setPositiveButton("OK") { dialog, which ->
+            deleteAllFilms()
+            updateRecyclerView()
+        }
+
+        alert.setNegativeButton("Cancel") { dialog, which ->
+            dialog.dismiss()
+        }
+
+        val dialog: AlertDialog = alert.create()
+
+        dialog.show()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.aPropos -> {
@@ -195,12 +228,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.toutSupprimer -> {
-                deleteAllFilms()
-                updateRecyclerView()
+                dialogDeConfirmation()
             }
 
             R.id.trierAnnee -> {
                 trierView.setText(R.string.tri_par_annee)
+                AppPreferences(applicationContext).setSortOption("Annee")
                 trierFilms {
                     AppDatabase.getDatabase(applicationContext).clientDao().trierParAnnee()
                 }
@@ -208,6 +241,7 @@ class MainActivity : AppCompatActivity() {
 
             R.id.trierNote -> {
                 trierView.setText(R.string.tri_par_note)
+                AppPreferences(applicationContext).setSortOption("Note")
                 trierFilms {
                     AppDatabase.getDatabase(applicationContext).clientDao().trierParNote()
                 }
@@ -215,6 +249,7 @@ class MainActivity : AppCompatActivity() {
 
             R.id.trierTitre -> {
                 trierView.setText(R.string.tri_par_titre)
+                AppPreferences(applicationContext).setSortOption("Titre")
                 trierFilms {
                     AppDatabase.getDatabase(applicationContext).clientDao().trierParTitre()
                 }
@@ -223,6 +258,24 @@ class MainActivity : AppCompatActivity() {
             else -> false
         }
         return true
+    }
+    // LE TRI NE MARCHE PAS QUAND ON REDEMARRE ESSAYE DANS UPDATERECYCLERVIEW CA MARCHE PAS NN PLUS
+    fun triPreference() {
+        val tri = AppPreferences(applicationContext).getSortOption()
+        when (tri) {
+            "Note" -> {
+                trierView.setText(R.string.tri_par_note)
+                trierFilms { AppDatabase.getDatabase(applicationContext).clientDao().trierParNote() }
+            }
+            "Annee" -> {
+                trierView.setText(R.string.tri_par_annee)
+                trierFilms { AppDatabase.getDatabase(applicationContext).clientDao().trierParAnnee() }
+            }
+            "Titre" -> {
+                trierView.setText(R.string.tri_par_titre)
+                trierFilms { AppDatabase.getDatabase(applicationContext).clientDao().trierParTitre() }
+            }
+        }
     }
 
     fun trierFilms(trierFunction: suspend () -> List<Film>) {

@@ -28,12 +28,12 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         if (item.image != "") {
             image.setImageURI(item.image.toUri())
         } else {
-            image.setImageResource(R.drawable.logo_background)
+            image.setImageResource(R.drawable.defaultimage)
         }
         nom.text = item.titre
         description.text = item.description
         rate.rating = item.rating.toFloat()
-        annee.text = item.annee.toString()
+        annee.text = "(${item.annee.toString()})"
         layout.setOnClickListener{
 
         }
