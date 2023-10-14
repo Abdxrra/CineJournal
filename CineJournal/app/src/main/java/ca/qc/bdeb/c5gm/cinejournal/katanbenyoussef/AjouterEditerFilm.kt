@@ -117,7 +117,7 @@ class AjouterEditerFilm : AppCompatActivity() {
             Toast.makeText(applicationContext, "Le titre est obligatoire !", Toast.LENGTH_SHORT)
                 .show()
         }
-        if (TextUtils.isEmpty(editAnnee.text)) {
+        else if (TextUtils.isEmpty(editAnnee.text)) {
             Toast.makeText(applicationContext, "L'année est obligatoire !", Toast.LENGTH_SHORT)
                 .show()
         } else {
