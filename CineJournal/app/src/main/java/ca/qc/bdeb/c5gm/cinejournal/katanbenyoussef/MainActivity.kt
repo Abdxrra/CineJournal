@@ -11,6 +11,7 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +22,10 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.net.SocketTimeoutException
+import kotlin.math.log
 
 const val EXTRA_MODE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_MODE"
 const val EXTRA_TITRE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_TITRE"
@@ -44,6 +49,46 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val cle = BuildConfig.API_KEY_TMDB
+
+        val client = OkHttpClient()
+
+        lifecycleScope.launch {
+            try {
+                val reponse = withContext(Dispatchers.IO) {
+                    ApiClient.apiService.getUsers()
+                }
+
+                if (!reponse.isSuccessful || reponse.body() == null) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Erreur: impossible de se connecter à l'API",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@launch
+                }
+
+                val users = reponse.body()!!
+
+                contenu.text = """
+                Il y a ${users.size} utilisateurs connus par cet API
+                
+                Le premier s'appelle ${users[0].name}
+                Il réside au ${users[0].address?.suite} ${users[0].address?.street}
+                Son ID unique est ${users[0].identifiantUnique}
+            """.trimIndent()
+
+            } catch (e: SocketTimeoutException) {
+                Toast.makeText(
+                    applicationContext,
+                    "Erreur: Réseau indisponible",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } finally {
+                bouton.isEnabled = true
+            }
+        }
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
