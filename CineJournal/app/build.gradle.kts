@@ -47,6 +47,25 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+    buildTypes {
+        val API_KEY_TMDB = gradleLocalProperties(rootDir)
+            .getProperty("API_KEY_TMDB")
+        debug {
+            buildConfigField("String", "API_KEY_TMDB", API_KEY_TMDB)
+        }
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            buildConfigField("String", "API_KEY_TMDB", API_KEY_TMDB)
+        }
+    }
 }
 
 dependencies {
@@ -65,9 +84,19 @@ dependencies {
     val room_version= "2.5.2"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
+
     // To use Kotlin Symbol Processing (KSP)
     ksp("androidx.room:room-compiler:$room_version")
     // optional- Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
+
+    // Dépendences pour les ViewModels/Coroutines
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.6.1")
+
+    // IMPORTANT: Dépendences externes requises pour utiliser Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
 }
