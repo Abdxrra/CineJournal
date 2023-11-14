@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             ArrayList<ItemView>(),
             { ItemView -> adapterOnclick(ItemView) })
         recyclerView.adapter = adapteur
-
+        val cle = BuildConfig.API_KEY_TMDB
         triPreference()
         addFilmsToView()
 
