@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val cle = BuildConfig.API_KEY_TMDB
+        /*val cle = BuildConfig.API_KEY_TMDB
 
         val client = OkHttpClient()
 
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             } finally {
                 bouton.isEnabled = true
             }
-        }
+        }*/
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -208,9 +208,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun adapterOnclick(itemView: ItemView) {
 
-        //var ajouterBtn: Button = findViewById(R.id.ajouter)
-        //ajouterBtn.setOnClickListener {
-        Log.d("testest", itemView.uid.toString())
         val intentMsg = Intent(applicationContext, AjouterEditerFilm::class.java)
         intentMsg.putExtra(EXTRA_MODE, "Edit")
         intentMsg.putExtra(EXTRA_UID, itemView.uid)
@@ -221,7 +218,6 @@ class MainActivity : AppCompatActivity() {
         intentMsg.putExtra(EXTRA_IMAGE, itemView.image)
 
         activityModifier.launch(intentMsg)
-        //}
     }
 
     fun addFilmsToView() {

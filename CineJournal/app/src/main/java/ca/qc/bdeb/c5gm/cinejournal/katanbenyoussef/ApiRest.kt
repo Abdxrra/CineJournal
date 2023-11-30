@@ -1,6 +1,6 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
-import android.util.Log
+import ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
@@ -10,13 +10,23 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.logging.Logger
 
-/**
- * Ensemble de data class pour représenter les données fournies par l'API
- */
+
+data class FilmResults(
+    val original_title: String,
+    val overview: String,
+    val popularity: Double,
+    val poster_path: String,
+    val release_date: String,
+    val title: String,
+)
+
+data class ListeFilms(
+    val results: List<FilmResults>,
+)
 
 data class FilmApi(
     val adult: Boolean,
@@ -33,7 +43,6 @@ data class FilmApi(
     val video: Boolean,
     val voteAverage: Double,
     val voteCount: Int
-
 )
 
 data class User(
@@ -82,6 +91,22 @@ data class Post(
  * Les méthodes peuvent composer
  */
 interface ApiService {
+
+    @GET("movie/now_playing")
+    suspend fun getNowPlayingMovies(
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1,
+        @Header("Authorization") authorization: String = "Bearer ${BuildConfig.API_KEY_TMDB}"
+    ): Response<ListeFilms>
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query("query") query: String,
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1,
+        @Header("Authorization") authorization: String = "Bearer ${BuildConfig.API_KEY_TMDB}"
+    ): Response<ListeFilms>
+
     @GET("users")
     suspend fun getUsers(): Response<List<User>>
 
@@ -118,52 +143,21 @@ interface ApiService {
  * Objet d'accès à l'API : essentiellement équivalent au singleton qui donnait accès à la BD dans le cas de Room
  */
 object ApiClient {
-    /**
-     * URL de base pour toutes les requêtes faites à l'API
-     */
     private const val BASE_URL: String = "https://api.themoviedb.org/3/"
-
-    /** __by lazy__ est un construit de Kotlin qui permet d'initialiser une variable
-     * au moment de l'utiliser pour la première fois
-     *
-     * Ça fait essentiellement ce qu'un singleton ferait avec :
-     *     if(INSTANCE == null)
-     *         INSTANCE = new Bidule()
-     *
-     * Mais en plus gracieux, en utilisant une fonctionnalité du langage plutôt qu'on codant
-     * cette logique à la main à chaque fois
-     */
-    private val gson: Gson by lazy {
-        GsonBuilder().setLenient().create()
-    }
 
     private val httpClient: OkHttpClient by lazy {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
         OkHttpClient.Builder()
             .addNetworkInterceptor(logging)
-            .addInterceptor { chain ->
-                val original = chain.request()
-        // Request customization: add request headers
-                val requestBuilder = original.newBuilder()
-                    .header("Authorization",
-                        "Bearer ${BuildConfig.API_KEY_TMDB}")
-                val request = requestBuilder.build()
-                chain.proceed(request)
-            }
             .build()
     }
 
+    private val gson: Gson by lazy {
+        GsonBuilder().setLenient().create()
+    }
+
     private val retrofit: Retrofit by lazy {
-        /**
-         *  Le patron Builder est utilisé ici
-         *  Voir: https://refactoring.guru/design-patterns/builder
-         *
-         * Un Builder est un objet de configuration dont les méthodes sont typiquement chaînables
-         *
-         * C'est une bonne alternative à définir un constructeur avec 2178643 arguments,
-         * qui sont tous possiblement optionnels
-         */
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(httpClient)
@@ -175,3 +169,4 @@ object ApiClient {
         retrofit.create(ApiService::class.java)
     }
 }
+
