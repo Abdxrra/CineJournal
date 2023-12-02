@@ -24,9 +24,9 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         annee = itemView.findViewById(R.id.filmAnnee)
     }
 
-    fun bind(item: ItemView) {
-        if (item.image != "") {
-            image.setImageURI(item.image.toUri())
+    fun bind(item: Film) {
+        if (item.imageUri != "") {
+            image.setImageURI(item.imageUri.toUri())
         } else {
             image.setImageResource(R.drawable.defaultimage)
         }

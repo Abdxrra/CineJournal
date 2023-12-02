@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 class AdapteurListeFilm(
     val ctx: Context,
     val activity: MainActivity,
-    var data: ArrayList<ItemView>,
-    val onclick:(ItemView)->Unit
+    var data: ArrayList<Film>,
+    val onclick:(Film)->Unit
 ) : RecyclerView.Adapter<ItemFilmHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemFilmHolder {
@@ -29,18 +29,18 @@ class AdapteurListeFilm(
         holder.layout.setOnClickListener {onclick(item)}
     }
 
-    fun addAllFilms(films: ArrayList<ItemView>) {
-        this.data = films
+    fun addAllFilms(films: List<Film>) {
+        this.data = films as ArrayList<Film>
         notifyDataSetChanged()
     }
 
-    fun addFilm(film: ItemView) {
+    fun addFilm(film: Film) {
         this.data.add(film)
         notifyDataSetChanged()
 
     }
 
-    fun updateFilm(film: ItemView){
+    fun updateFilm(film: Film){
         for (f in data) {
             if(f.uid == film.uid){
                 val index = this.data.indexOf(f)

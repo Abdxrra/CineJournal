@@ -11,7 +11,6 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,10 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.net.SocketTimeoutException
-import kotlin.math.log
 
 const val EXTRA_MODE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_MODE"
 const val EXTRA_TITRE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_TITRE"
@@ -43,52 +38,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var noFilmText: TextView
     lateinit var activityModifier: ActivityResultLauncher<Intent>
     lateinit var trierView: TextView
-    val transformToItemView: (Film) -> ItemView =
-        { ItemView(it.uid!!, it.titre, it.description, it.annee, it.rating, it.imageUri) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        /*val cle = BuildConfig.API_KEY_TMDB
-
-        val client = OkHttpClient()
-
-        lifecycleScope.launch {
-            try {
-                val reponse = withContext(Dispatchers.IO) {
-                    ApiClient.apiService.getUsers()
-                }
-
-                if (!reponse.isSuccessful || reponse.body() == null) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Erreur: impossible de se connecter à l'API",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@launch
-                }
-
-                val users = reponse.body()!!
-
-                contenu.text = """
-                Il y a ${users.size} utilisateurs connus par cet API
-                
-                Le premier s'appelle ${users[0].name}
-                Il réside au ${users[0].address?.suite} ${users[0].address?.street}
-                Son ID unique est ${users[0].identifiantUnique}
-            """.trimIndent()
-
-            } catch (e: SocketTimeoutException) {
-                Toast.makeText(
-                    applicationContext,
-                    "Erreur: Réseau indisponible",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } finally {
-                bouton.isEnabled = true
-            }
-        }*/
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -99,8 +52,8 @@ class MainActivity : AppCompatActivity() {
         adapteur = AdapteurListeFilm(
             applicationContext,
             MainActivity(),
-            ArrayList<ItemView>(),
-            { ItemView -> adapterOnclick(ItemView) })
+            ArrayList<Film>(),
+            { Film -> adapterOnclick(Film) })
         recyclerView.adapter = adapteur
         val cle = BuildConfig.API_KEY_TMDB
         triPreference()
@@ -138,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                         adapteur.addFilm(
-                            ItemView(
+                            Film(
                                 uid.toInt(),
                                 titre,
                                 description,
@@ -190,7 +143,7 @@ class MainActivity : AppCompatActivity() {
 
                         }
                     }
-                    adapteur.updateFilm(ItemView(uid, titre, description, annee, rating, imageUri))
+                    adapteur.updateFilm(Film(uid, titre, description, annee, rating, imageUri))
                     updateRecyclerView()
 
                 }
@@ -206,16 +159,16 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun adapterOnclick(itemView: ItemView) {
+    private fun adapterOnclick(film: Film) {
 
         val intentMsg = Intent(applicationContext, AjouterEditerFilm::class.java)
         intentMsg.putExtra(EXTRA_MODE, "Edit")
-        intentMsg.putExtra(EXTRA_UID, itemView.uid)
-        intentMsg.putExtra(EXTRA_TITRE, itemView.titre)
-        intentMsg.putExtra(EXTRA_SLOGAN, itemView.description)
-        intentMsg.putExtra(EXTRA_ANNEE, itemView.annee)
-        intentMsg.putExtra(EXTRA_NOTE, itemView.rating)
-        intentMsg.putExtra(EXTRA_IMAGE, itemView.image)
+        intentMsg.putExtra(EXTRA_UID, film.uid)
+        intentMsg.putExtra(EXTRA_TITRE, film.titre)
+        intentMsg.putExtra(EXTRA_SLOGAN, film.description)
+        intentMsg.putExtra(EXTRA_ANNEE, film.annee)
+        intentMsg.putExtra(EXTRA_NOTE, film.rating)
+        intentMsg.putExtra(EXTRA_IMAGE, film.imageUri)
 
         activityModifier.launch(intentMsg)
     }
@@ -226,9 +179,7 @@ class MainActivity : AppCompatActivity() {
                 AppDatabase.getDatabase(applicationContext).clientDao().getAll()
             }
 
-            val transformToItemView: (Film) -> ItemView =
-                { ItemView(it.uid!!, it.titre, it.description, it.annee, it.rating, it.imageUri) }
-            adapteur.addAllFilms(films.map(transformToItemView) as ArrayList<ItemView>)
+            adapteur.addAllFilms(films)//.map(transformToItemView) as ArrayList<ItemView>)
 
             updateRecyclerView()
         }
@@ -325,7 +276,7 @@ class MainActivity : AppCompatActivity() {
     fun trierFilms(trierFunction: suspend () -> List<Film>) {
         lifecycleScope.launch {
             val listeTrie = withContext(Dispatchers.IO) { trierFunction() }
-            adapteur.addAllFilms(listeTrie.map(transformToItemView) as ArrayList<ItemView>)
+            adapteur.addAllFilms(listeTrie)//.map(transformToItemView) as ArrayList<ItemView>)
             updateRecyclerView()
         }
     }
