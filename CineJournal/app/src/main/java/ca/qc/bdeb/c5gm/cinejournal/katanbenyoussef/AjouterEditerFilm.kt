@@ -15,14 +15,20 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
+import androidx.lifecycle.ViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+
+class CineJournalViewModel: ViewModel(){
+    var imageSelectionneUri: Uri? = null
+}
 
 class AjouterEditerFilm : AppCompatActivity() {
 
@@ -33,6 +39,7 @@ class AjouterEditerFilm : AppCompatActivity() {
     lateinit var editFilmRating: RatingBar
     lateinit var editFilmImage: ImageView
     lateinit var imgBtn: Button
+    val viewModel: CineJournalViewModel by viewModels()
     var uriFilm: String = ""
     var uid: Int? = null
 
@@ -42,6 +49,7 @@ class AjouterEditerFilm : AppCompatActivity() {
             if (uri != null) {
 
                 val imageLocale = creerUriPhoto()
+                viewModel.imageSelectionneUri = imageLocale
                 val inputStream = contentResolver.openInputStream(uri)
                 val outputStream = contentResolver.openOutputStream(imageLocale)
 
@@ -76,6 +84,9 @@ class AjouterEditerFilm : AppCompatActivity() {
         editAnnee = findViewById(R.id.editAnnee)
         editFilmRating = findViewById(R.id.editFilmRating)
         editFilmImage = findViewById(R.id.editFilmImage)
+
+        // rechage l'image si elle à déjà été sélectionné
+        editFilmImage.setImageURI(viewModel.imageSelectionneUri)
 
         val extras = intent.extras
         if (extras != null) {
