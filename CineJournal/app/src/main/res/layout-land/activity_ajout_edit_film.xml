@@ -163,7 +163,7 @@
         android:layout_marginStart="15dp"
         android:width="300dp"
         android:ems="10"
-        android:inputType="text"
+        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 

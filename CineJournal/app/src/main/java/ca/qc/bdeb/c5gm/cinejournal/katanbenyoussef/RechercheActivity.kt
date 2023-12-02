@@ -3,6 +3,7 @@ package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,7 +17,7 @@ import kotlinx.coroutines.withContext
 class RechercheActivity : AppCompatActivity() {
 
     lateinit var searchButton: Button
-    lateinit var filmRechercheInput: TextInputLayout
+    lateinit var filmRechercheInput: EditText
     lateinit var textViewRecherche: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +43,7 @@ class RechercheActivity : AppCompatActivity() {
         textViewRecherche = findViewById(R.id.textView9)
 
         searchButton.setOnClickListener {
-            val searchTerm = filmRechercheInput.editText?.text.toString()
+            val searchTerm = filmRechercheInput.text.toString()
             if (searchTerm.isNotEmpty()) {
                 lifecycleScope.launch {
                     try {
