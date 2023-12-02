@@ -36,8 +36,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var adapteur: AdapteurListeFilm
     lateinit var noFilmText: TextView
-    //lateinit var activityModifier: ActivityResultLauncher<Intent>
-    lateinit var activityEditAddFilm: ActivityResultLauncher<Intent>
+    lateinit var activityModifier: ActivityResultLauncher<Intent>
     lateinit var trierView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,11 +55,16 @@ class MainActivity : AppCompatActivity() {
             ArrayList<Film>(),
             { Film -> adapterOnclick(Film) })
         recyclerView.adapter = adapteur
-        val cle = BuildConfig.API_KEY_TMDB
         triPreference()
         addFilmsToView()
 
-        activityEditAddFilm = registerForActivityResult(
+        val titre = intent.getStringExtra(EXTRA_TITRE)
+        val slogan = intent.getStringExtra(EXTRA_SLOGAN)
+        val annee = intent.getStringExtra(EXTRA_ANNEE)
+        val note = intent.getDoubleExtra(EXTRA_NOTE, 0.0)
+        val image = intent.getStringExtra(EXTRA_IMAGE)
+
+        val activityAjouter = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -68,51 +72,85 @@ class MainActivity : AppCompatActivity() {
                 val extras = intent.extras
 
                 if (extras != null) {
-                    val mode: String = extras.getString(EXTRA_MODE)!!
-                    val uid: Int = extras.getInt(EXTRA_UID)
+
                     val titre: String = extras.getString(EXTRA_TITRE)!!
                     val description: String = extras.getString(EXTRA_SLOGAN)!!
                     val annee: Int = extras.getInt(EXTRA_ANNEE)
                     val rating: Double = extras.getDouble(EXTRA_NOTE)
                     val imageUri: String = extras.getString(EXTRA_IMAGE)!!
 
-                    val dao = AppDatabase.getDatabase(applicationContext).clientDao()
-                    if(mode == "Ajouter"){
-                        lifecycleScope.launch {
-                            withContext(Dispatchers.IO) {
-                                dao.insertAll(
-                                    Film(
-                                        null,
-                                        titre,
-                                        description,
-                                        annee,
-                                        rating,
-                                        imageUri
-                                    )
+                    Log.d("main", titre)
+
+                    lifecycleScope.launch {
+                        val uid = withContext(Dispatchers.IO) {
+                            val dao = AppDatabase.getDatabase(applicationContext).clientDao()
+                            dao.insertAll(
+                                Film(
+                                    null,
+                                    titre,
+                                    description,
+                                    annee,
+                                    rating,
+                                    imageUri
                                 )
-                            }
+                            )
                         }
-                        adapteur.addFilm(Film(uid, titre, description, annee, rating, imageUri))
-                    }
-                    else{
-                        lifecycleScope.launch {
-                            withContext(Dispatchers.IO) {
-                                dao.updateAll(
-                                    Film(
-                                        uid,
-                                        titre,
-                                        description,
-                                        annee,
-                                        rating,
-                                        imageUri
-                                    )
-                                )
-                            }
-                        }
-                        adapteur.updateFilm(Film(uid, titre, description, annee, rating, imageUri))
+                        adapteur.addFilm(
+                            Film(
+                                uid.toInt(),
+                                titre,
+                                description,
+                                annee,
+                                rating,
+                                imageUri
+                            )
+                        )
+                        updateRecyclerView()
                     }
 
+                }
+            }
+        }
+
+        activityModifier = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data ?: Intent()
+                val extras = intent.extras
+
+                if (extras != null) {
+                    val uid: Int = extras.getInt(EXTRA_UID)!!
+                    val titre: String = extras.getString(EXTRA_TITRE)!!
+                    val description: String = extras.getString(EXTRA_SLOGAN)!!
+                    val annee: Int = extras.getInt(EXTRA_ANNEE)
+                    val rating: Double = extras.getDouble(EXTRA_NOTE)
+                    val imageUri: String = extras.getString(EXTRA_IMAGE)!!
+
+                    Log.d("main", titre)
+
+
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            val dao = AppDatabase.getDatabase(applicationContext).clientDao()
+                            Log.d("test", "$uid $titre $description $annee $rating $imageUri")
+                            val d = dao.updateAll(
+                                Film(
+                                    uid,
+                                    titre,
+                                    description,
+                                    annee,
+                                    rating,
+                                    imageUri
+                                )
+                            )
+                            Log.d("testest", d.toString())
+
+                        }
+                    }
+                    adapteur.updateFilm(Film(uid, titre, description, annee, rating, imageUri))
                     updateRecyclerView()
+
                 }
             }
         }
@@ -121,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         ajouterBtn.setOnClickListener {
             val intent = Intent(applicationContext, AjouterEditerFilm::class.java)
             intent.putExtra(EXTRA_MODE, "Ajouter")
-            activityEditAddFilm.launch(intent)
+            activityAjouter.launch(intent)
         }
     }
 
@@ -137,7 +175,7 @@ class MainActivity : AppCompatActivity() {
         intentMsg.putExtra(EXTRA_NOTE, film.rating)
         intentMsg.putExtra(EXTRA_IMAGE, film.imageUri)
 
-        activityEditAddFilm.launch(intentMsg)
+        activityModifier.launch(intentMsg)
     }
 
     fun addFilmsToView() {

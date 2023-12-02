@@ -17,11 +17,11 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     init {
 
         layout = itemView as ConstraintLayout
-        image = itemView.findViewById(R.id.filmImage)
-        nom = itemView.findViewById(R.id.filmTitle)
+        image = itemView.findViewById(R.id.imageFilm)
+        nom = itemView.findViewById(R.id.titreFilm)
         description = itemView.findViewById(R.id.filmDescription)
         rate = itemView.findViewById(R.id.editFilmRating)
-        annee = itemView.findViewById(R.id.filmAnnee)
+        annee = itemView.findViewById(R.id.anneeFilm)
     }
 
     fun bind(item: Film) {
