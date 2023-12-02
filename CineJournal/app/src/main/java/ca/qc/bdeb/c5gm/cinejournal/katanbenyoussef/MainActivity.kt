@@ -125,7 +125,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun adapterOnclick(film: Film) {
 
         val intentMsg = Intent(applicationContext, AjouterEditerFilm::class.java)
