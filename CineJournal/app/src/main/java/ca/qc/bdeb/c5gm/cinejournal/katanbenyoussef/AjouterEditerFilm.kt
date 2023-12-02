@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -133,6 +134,8 @@ class AjouterEditerFilm : AppCompatActivity() {
                 .show()
         } else {
             val intentMsg = Intent()
+
+            intentMsg.putExtra(EXTRA_MODE, (if (uid != null) "Edit" else "Ajouter"))
             intentMsg.putExtra(EXTRA_UID, uid)
             intentMsg.putExtra(EXTRA_TITRE, editTitre.text.toString())
             intentMsg.putExtra(EXTRA_SLOGAN, editSlogan.text.toString())
