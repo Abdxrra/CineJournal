@@ -34,7 +34,7 @@ const val EXTRA_UID = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_UID"
 class MainActivity : AppCompatActivity() {
 
     lateinit var recyclerView: RecyclerView
-    lateinit var adapteur: AdapteurListeFilm
+    public lateinit var adapteur: AdapteurListeFilm
     lateinit var noFilmText: TextView
     //lateinit var activityModifier: ActivityResultLauncher<Intent>
     lateinit var activityEditAddFilm: ActivityResultLauncher<Intent>

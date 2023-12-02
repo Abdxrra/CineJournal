@@ -143,6 +143,10 @@ class AjouterEditerFilm : AppCompatActivity() {
             intentMsg.putExtra(EXTRA_NOTE, editFilmRating.rating.toDouble())
             intentMsg.putExtra(EXTRA_IMAGE, uriFilm)
             setResult(RESULT_OK, intentMsg)
+            //adapteur.addFilm(Film(uid, titre, description, annee, rating, imageUri))
+
+
+
             finish()
             val toastMessage = "${editTitre.text} ajouté à la liste"
             Toast.makeText(applicationContext, toastMessage, Toast.LENGTH_SHORT).show()
