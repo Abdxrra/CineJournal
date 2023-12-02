@@ -1,7 +1,5 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
-import android.app.Activity
-import android.app.IntentService
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -9,19 +7,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
-import android.transition.Transition
 import android.util.Log
 import android.widget.RemoteViews
-import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.target.AppWidgetTarget
 
 /**
  * Implementation of App Widget functionality.
@@ -85,6 +77,7 @@ class WidgetFilm : AppWidgetProvider() {
                 if (response.isSuccessful) {
                     filmResults = response.body()?.results!!
                     images = filmResults.map { it.poster_path }
+                    Log.d("Main", images.toString())
 
                 } else {
                     // Handle API error
@@ -100,28 +93,9 @@ class WidgetFilm : AppWidgetProvider() {
 
             val view = RemoteViews(context.packageName, R.layout.widget_film)
 
-            // cover du film
-            //view.setImageViewResource(R.id.imageView, images[imageTracker])
-            // LIBRAIRIE GLIDE POUR LES IMAGES, LE CACHING, ETC. (l'autre façon ne marchait pas)
-
-            val bitmap: Bitmap = Glide.with(context)
-                .asBitmap()
-                .load("https://image.tmdb.org/t/p/w500/pD6sL4vntUOXHmuvJPPZAgvyfd9.jpg")
-                .submit(512, 512)
-                .get()
-
-            view.setImageViewBitmap(R.id.imageView, bitmap)
-
-            /*
-            Glide.with(context)
-                .load("https://image.tmdb.org/t/p/w500/pD6sL4vntUOXHmuvJPPZAgvyfd9.jpg")
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(awt)
-
-            view.setImageViewUri(R.id.imageView, Uri.parse("https://image.tmdb.org/t/p/w500/pD6sL4vntUOXHmuvJPPZAgvyfd9.jpg"))
-
-             */
+            // Load image depuis une URL
+            val imageUrl = "https://image.tmdb.org/t/p/w500/pD6sL4vntUOXHmuvJPPZAgvyfd9.jpg" // Replace with your image URL
+            WidgetImageLoader(view, appWidgetManager, appWidgetId).execute(imageUrl)
 
             // click sur avant
             val intentPrecedent = Intent(context, WidgetFilm::class.java)
