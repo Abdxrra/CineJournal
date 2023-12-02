@@ -55,9 +55,14 @@ class MainActivity : AppCompatActivity() {
             ArrayList<Film>(),
             { Film -> adapterOnclick(Film) })
         recyclerView.adapter = adapteur
-        val cle = BuildConfig.API_KEY_TMDB
         triPreference()
         addFilmsToView()
+
+        val titre = intent.getStringExtra(EXTRA_TITRE)
+        val slogan = intent.getStringExtra(EXTRA_SLOGAN)
+        val annee = intent.getStringExtra(EXTRA_ANNEE)
+        val note = intent.getDoubleExtra(EXTRA_NOTE, 0.0)
+        val image = intent.getStringExtra(EXTRA_IMAGE)
 
         val activityAjouter = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()

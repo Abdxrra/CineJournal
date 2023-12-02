@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.text.Editable
 import android.text.TextUtils
 import android.view.View
 import android.widget.Button
@@ -20,8 +21,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
+import com.bumptech.glide.Glide
 import java.io.File
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -84,6 +88,24 @@ class AjouterEditerFilm : AppCompatActivity() {
         editAnnee = findViewById(R.id.editAnnee)
         editFilmRating = findViewById(R.id.editFilmRating)
         editFilmImage = findViewById(R.id.editFilmImage)
+
+        val titre = intent.getStringExtra(EXTRA_TITRE)
+        val slogan = intent.getStringExtra(EXTRA_SLOGAN)
+        val annee = intent.getIntExtra(EXTRA_ANNEE, 0)
+        val note = intent.getDoubleExtra(EXTRA_NOTE, 0.0)
+        val imageUri = intent.getStringExtra(EXTRA_IMAGE)
+
+
+
+        editTitre.text = Editable.Factory.getInstance().newEditable(titre)
+        editSlogan.text = Editable.Factory.getInstance().newEditable(slogan)
+        editAnnee.text = Editable.Factory.getInstance().newEditable(annee.toString())
+        editFilmRating.rating = (note / 2).toFloat()
+
+        val imageUrl = "https://image.tmdb.org/t/p/w500$imageUri"
+        Glide.with(this)
+            .load(imageUrl)
+            .into(editFilmImage)
 
         // rechage l'image si elle à déjà été sélectionné
         editFilmImage.setImageURI(viewModel.imageSelectionneUri)

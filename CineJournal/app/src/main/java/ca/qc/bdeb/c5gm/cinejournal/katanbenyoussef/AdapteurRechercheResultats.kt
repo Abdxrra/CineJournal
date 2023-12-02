@@ -14,10 +14,29 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 class AdapteurRechercheResultats(private var filmResults: List<FilmResults>) : RecyclerView.Adapter<AdapteurRechercheResultats.ViewHolder>() {
 
+    private var onItemClickListener: OnItemClickListener? = null
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgFilm: ImageView = itemView.findViewById(R.id.resultatImage)
         val nomFilm: TextView = itemView.findViewById(R.id.resultatFilm)
         val anneeFilm: TextView = itemView.findViewById(R.id.resultatAnnee)
+
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val clickedItem = filmResults[position]
+                    onItemClickListener?.onItemClick(clickedItem)
+                }
+            }
+        }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(item: FilmResults)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        onItemClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,8 +66,8 @@ class AdapteurRechercheResultats(private var filmResults: List<FilmResults>) : R
         holder.anneeFilm.text = filmResult.release_date
     }
 
-    fun updateData(newUniversities: List<FilmResults>) {
-        filmResults = newUniversities
+    fun updateData(newFilms: List<FilmResults>) {
+        filmResults = newFilms
         notifyDataSetChanged()
     }
 }

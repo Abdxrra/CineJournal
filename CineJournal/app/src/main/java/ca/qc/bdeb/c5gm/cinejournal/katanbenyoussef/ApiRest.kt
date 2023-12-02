@@ -22,6 +22,7 @@ data class FilmResults(
     val poster_path: String,
     val release_date: String,
     val title: String,
+    val note: Double,
 )
 
 data class ListeFilms(
@@ -45,42 +46,11 @@ data class FilmApi(
     val voteCount: Int
 )
 
-data class User(
-    /**
-     * Dans le cas où on veut donner un nom plus clair à notre classe
-     * que le nom qui est disponible dans l'API, on peut utiliser
-     *
-     * @SerializedName("nomDansLAPI")
-     */
-    @SerializedName("id") val identifiantUnique: Int,
-    @SerializedName("wat") val name: Int,
-    val userName: String,
-    val email: String,
-    val address: Address?,
-    val phone: String,
-    val website: String,
-)
-
 data class Address(
     val street: String,
     val suite: String,
     val city: String,
     val zipCode: String,
-)
-
-data class Comment(
-    val postId: Int = 0,
-    val id: Int = 0,
-    val name: String,
-    val email: String,
-    val body: String
-)
-
-data class Post(
-    val userId: Int = 0,
-    val id: Int,
-    val title: String,
-    val body: String
 )
 
 /**
@@ -106,37 +76,6 @@ interface ApiService {
         @Query("page") page: Int = 1,
         @Header("Authorization") authorization: String = "Bearer ${BuildConfig.API_KEY_TMDB}"
     ): Response<ListeFilms>
-
-    @GET("users")
-    suspend fun getUsers(): Response<List<User>>
-
-    /**
-     * Méthode avec un paramètre à injecter dans l'URL, par exemple :
-     *
-     * num = 17
-     * => https://jsonplaceholder.typicode.com/posts/17
-     */
-    @GET("posts/{num}")
-    suspend fun getPostById(@Path("num") num: Int): Response<Post>
-
-    /**
-     * Méthode avec un paramètre à injecter dans la Query String, par exemple :
-     *
-     * postId = 17
-     * => https://jsonplaceholder.typicode.com/comments?postId=17
-     */
-    @GET("comments")
-    suspend fun getCommentsByPost(@Query("postId") postId: Int): Response<List<Comment>>
-
-    /**
-     * On peut également définir des méthodes @POST() pour envoyer des données à l'API si celui-ci
-     * le supporte
-     *
-     * D'autres méthodes HTTP sont également possibles, à vous de fouiller dans la doc
-     */
-
-    @GET("movie/popular")
-    suspend fun getPopularMovies(@Query("page") postId: Int): Response<List<FilmApi>>
 }
 
 /**
