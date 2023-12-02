@@ -5,6 +5,8 @@
     <!-- TRÈS IMPORTANT! De base, les applications n'ont pas le droit d'accéder à Internet,
  vous devez explicitement le déclarer si vous souhaitez le faire -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 
     <application
