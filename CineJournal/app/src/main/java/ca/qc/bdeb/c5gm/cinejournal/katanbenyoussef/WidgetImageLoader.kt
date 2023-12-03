@@ -19,6 +19,7 @@ class WidgetImageLoader(
         return try {
             // charge l'image depuis une URL
             val input: InputStream = URL(imageUrl).openStream()
+            // transforme en bitmap
             BitmapFactory.decodeStream(input)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -28,6 +29,7 @@ class WidgetImageLoader(
 
     override fun onPostExecute(result: Bitmap?) {
         result?.let {
+            // ajoute à l'interface
             views.setImageViewBitmap(R.id.imageView, it)
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }

@@ -1,7 +1,5 @@
 package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -21,15 +19,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-class CineJournalViewModel: ViewModel(){
-    var imageSelectionneUri: Uri? = null
-}
 
 class AjouterEditerFilm : AppCompatActivity() {
 
@@ -40,7 +39,8 @@ class AjouterEditerFilm : AppCompatActivity() {
     lateinit var editFilmRating: RatingBar
     lateinit var editFilmImage: ImageView
     lateinit var imgBtn: Button
-    val viewModel: CineJournalViewModel by viewModels()
+    val viewModel: CineViewModel by viewModels()
+
     var uriFilm: String = ""
     var uid: Int? = null
 
@@ -60,16 +60,14 @@ class AjouterEditerFilm : AppCompatActivity() {
                     }
                 }
 
-                editFilmImage.setImageURI(imageLocale)
-
                 // On fait quelque chose avec l'image reçue sous forme d'URI
-                editFilmImage.setImageURI(uri)
-                uriFilm = imageLocale.toString()
+                editFilmImage.setImageURI(viewModel.imageSelectionneUri)
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //viewModel = ViewModelProvider(this)[CineViewModel::class.java]
         setContentView(R.layout.activity_ajout_edit_film)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -89,19 +87,23 @@ class AjouterEditerFilm : AppCompatActivity() {
         // rechage l'image si elle à déjà été sélectionné
         editFilmImage.setImageURI(viewModel.imageSelectionneUri)
 
+
         val extras = intent.extras
         if (extras != null) {
             val mode = extras.getString(EXTRA_MODE)
+            Log.d("Main", mode.toString())
             modeActivity.text = when (mode) {
+
+                // getInt(EXTRA_UID) retourne 0 si c'est null, donc je le met dans un switch
                 "Edit" -> {
                     uid = extras.getInt(EXTRA_UID)
-                    editTitre.setText(extras.getString(EXTRA_TITRE))
-                    editSlogan.setText(extras.getString(EXTRA_SLOGAN))
-                    editAnnee.setText(extras.getInt(EXTRA_ANNEE).toString())
-                    editFilmRating.rating = extras.getDouble(EXTRA_NOTE).toFloat()
-                    uriFilm = extras.getString(EXTRA_IMAGE)!!.toString()
-                    editFilmImage.setImageURI(uriFilm.toUri())
+                    setExtrasInDisplay(extras)
                     "Modifier un Film"
+                }
+                "Widget" -> {
+                    uid = null
+                    setExtrasInDisplay(extras)
+                    "Nouveau Film"
                 }
 
                 else -> "Nouveau Film"
@@ -110,6 +112,15 @@ class AjouterEditerFilm : AppCompatActivity() {
         imgBtn.setOnClickListener {
             selectionPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+    }
+
+    fun setExtrasInDisplay(extras: Bundle){
+        editTitre.setText(extras.getString(EXTRA_TITRE))
+        editSlogan.setText(extras.getString(EXTRA_SLOGAN))
+        editAnnee.setText(extras.getInt(EXTRA_ANNEE).toString())
+        editFilmRating.rating = extras.getDouble(EXTRA_NOTE).toFloat()
+        viewModel.imageSelectionneUri = extras.getString(EXTRA_IMAGE)!!.toUri()
+        editFilmImage.setImageURI(viewModel.imageSelectionneUri)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -133,19 +144,31 @@ class AjouterEditerFilm : AppCompatActivity() {
             Toast.makeText(applicationContext, "L'année est obligatoire !", Toast.LENGTH_SHORT)
                 .show()
         } else {
-            val intentMsg = Intent()
 
-            intentMsg.putExtra(EXTRA_MODE, (if (uid != null) "Edit" else "Ajouter"))
-            intentMsg.putExtra(EXTRA_UID, uid)
-            intentMsg.putExtra(EXTRA_TITRE, editTitre.text.toString())
-            intentMsg.putExtra(EXTRA_SLOGAN, editSlogan.text.toString())
-            intentMsg.putExtra(EXTRA_ANNEE, editAnnee.text.toString().toInt())
-            intentMsg.putExtra(EXTRA_NOTE, editFilmRating.rating.toDouble())
-            intentMsg.putExtra(EXTRA_IMAGE, uriFilm)
-            setResult(RESULT_OK, intentMsg)
-            //adapteur.addFilm(Film(uid, titre, description, annee, rating, imageUri))
+            val dao = AppDatabase.getDatabase(applicationContext).clientDao()
 
+            var filmToAdd = Film(
+                uid,
+                editTitre.text.toString(),
+                editSlogan.text.toString(),
+                editAnnee.text.toString().toInt(),
+                editFilmRating.rating.toDouble(),
+                viewModel.imageSelectionneUri.toString()
+            )
 
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (uid != null){
+                        dao.updateOne(filmToAdd)
+                        //viewModel.adapteur?.test()
+                        viewModel.adapteur?.updateFilm(filmToAdd)
+                    } else {
+                        dao.insertAll(filmToAdd)
+                        Log.d("ttt", viewModel.adapteur.toString())
+                        viewModel.adapteur?.addFilm(filmToAdd)
+                    }
+                }
+            }
 
             finish()
             val toastMessage = "${editTitre.text} ajouté à la liste"

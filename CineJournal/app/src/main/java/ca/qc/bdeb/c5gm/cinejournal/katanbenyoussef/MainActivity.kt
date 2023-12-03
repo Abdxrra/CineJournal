@@ -14,8 +14,10 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -29,16 +31,20 @@ const val EXTRA_ANNEE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_ANNEE"
 const val EXTRA_NOTE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_NOTE"
 const val EXTRA_IMAGE = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_IMAGE"
 const val EXTRA_UID = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_UID"
+const val EXTRA_FILM = "ca.qc.bdeb.c5gm.cinejournal.EXTRA_FILM"
+
 
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var recyclerView: RecyclerView
-    public lateinit var adapteur: AdapteurListeFilm
+    //public lateinit var adapteur: AdapteurListeFilm
     lateinit var noFilmText: TextView
     //lateinit var activityModifier: ActivityResultLauncher<Intent>
     lateinit var activityEditAddFilm: ActivityResultLauncher<Intent>
     lateinit var trierView: TextView
+    val viewModel: CineViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,12 +56,15 @@ class MainActivity : AppCompatActivity() {
         noFilmText = findViewById(R.id.noFilmText)
         trierView = findViewById(R.id.trierMode)
         recyclerView = findViewById(R.id.recyclerView)
-        adapteur = AdapteurListeFilm(
+
+        //viewModel = ViewModelProvider(this).get(CineViewModel::class.java)
+
+        viewModel.adapteur = AdapteurListeFilm(
             applicationContext,
             MainActivity(),
             ArrayList<Film>(),
             { Film -> adapterOnclick(Film) })
-        recyclerView.adapter = adapteur
+        recyclerView.adapter = viewModel.adapteur
         val cle = BuildConfig.API_KEY_TMDB
         triPreference()
         addFilmsToView()
@@ -63,6 +72,8 @@ class MainActivity : AppCompatActivity() {
         activityEditAddFilm = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
+            addFilmsToView()
+            /*
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data ?: Intent()
                 val extras = intent.extras
@@ -76,45 +87,20 @@ class MainActivity : AppCompatActivity() {
                     val rating: Double = extras.getDouble(EXTRA_NOTE)
                     val imageUri: String = extras.getString(EXTRA_IMAGE)!!
 
-                    val dao = AppDatabase.getDatabase(applicationContext).clientDao()
-                    if(mode == "Ajouter"){
-                        lifecycleScope.launch {
-                            withContext(Dispatchers.IO) {
-                                dao.insertAll(
-                                    Film(
-                                        null,
-                                        titre,
-                                        description,
-                                        annee,
-                                        rating,
-                                        imageUri
-                                    )
-                                )
-                            }
-                        }
-                        adapteur.addFilm(Film(uid, titre, description, annee, rating, imageUri))
+                    if(mode == "Ajouter" || mode == "Widget"){
+                        //adapteur.addFilm(Film(null, titre, description, annee, rating, imageUri))
+                        addFilmsToView()
                     }
                     else{
-                        lifecycleScope.launch {
-                            withContext(Dispatchers.IO) {
-                                dao.updateAll(
-                                    Film(
-                                        uid,
-                                        titre,
-                                        description,
-                                        annee,
-                                        rating,
-                                        imageUri
-                                    )
-                                )
-                            }
-                        }
-                        adapteur.updateFilm(Film(uid, titre, description, annee, rating, imageUri))
+                        //adapteur.updateFilm(Film(uid, titre, description, annee, rating, imageUri))
+                        addFilmsToView()
                     }
-
-                    updateRecyclerView()
                 }
-            }
+                    updateRecyclerView()
+                addFilmsToView()
+                }
+            */
+
         }
 
         var ajouterBtn: Button = findViewById(R.id.ajouter)
@@ -145,7 +131,8 @@ class MainActivity : AppCompatActivity() {
                 AppDatabase.getDatabase(applicationContext).clientDao().getAll()
             }
 
-            adapteur.addAllFilms(films)//.map(transformToItemView) as ArrayList<ItemView>)
+            Log.d("main", viewModel.adapteur.toString())
+            viewModel.adapteur?.addAllFilms(films)//.map(transformToItemView) as ArrayList<ItemView>)
 
             updateRecyclerView()
         }
@@ -242,13 +229,13 @@ class MainActivity : AppCompatActivity() {
     fun trierFilms(trierFunction: suspend () -> List<Film>) {
         lifecycleScope.launch {
             val listeTrie = withContext(Dispatchers.IO) { trierFunction() }
-            adapteur.addAllFilms(listeTrie)//.map(transformToItemView) as ArrayList<ItemView>)
+            viewModel.adapteur?.addAllFilms(listeTrie)//.map(transformToItemView) as ArrayList<ItemView>)
             updateRecyclerView()
         }
     }
 
     fun deleteAllFilms() {
-        adapteur.deleteAllFilms()
+        viewModel.adapteur?.deleteAllFilms()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 AppDatabase.getDatabase(applicationContext).clientDao().deleteAll()
@@ -257,11 +244,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateRecyclerView() {
-        if (adapteur.itemCount != 0) {
+        if (viewModel.adapteur?.itemCount != 0) {
             noFilmText.visibility = INVISIBLE
             recyclerView.visibility = VISIBLE
         }
-        if (adapteur.itemCount == 0) {
+        if (viewModel.adapteur?.itemCount == 0) {
             noFilmText.visibility = VISIBLE
             recyclerView.visibility = INVISIBLE
         }

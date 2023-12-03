@@ -9,10 +9,13 @@ import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
 
 /**
  * Implementation of App Widget functionality.
@@ -27,13 +30,17 @@ class WidgetFilm : AppWidgetProvider() {
     ) {
 
         for (appWidgetId in appWidgetIds) {
-            fetchAndDisplayMovies(context, appWidgetManager, appWidgetId)
+            //fetchAndDisplayMovies(context, appWidgetManager, appWidgetId)
+            fetchMovies()
+            updateAppWidget(context, appWidgetManager, appWidgetId)
             //updateAppWidget(context, appWidgetManager, appWidgetId)
         }
 
     }
     override fun onReceive(context: Context, intent: Intent) {
+        fetchMovies()
         super.onReceive(context, intent)
+
 
         when (intent.action) {
             "Avant" -> {
@@ -70,20 +77,44 @@ class WidgetFilm : AppWidgetProvider() {
         //lateinit var images: List<String>;// = listOf(R.drawable.app_widget_inner_view_background, R.drawable.app_widget_background)
         lateinit var films: List<Film>;
 
-        private fun fetchAndDisplayMovies(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int) {
+        private fun fetchMovies(){
+            runBlocking {// attendre que les films soit chargés
+                CoroutineScope(coroutineContext).launch {
+                val response = ApiClient.apiService.getNowPlayingMovies()
+                    Log.d("Main", response.isSuccessful.toString())
+
+                    if (response.isSuccessful) {
+                        filmResults = response.body()?.results!!
+                        films = filmResults.map {
+                            Film(
+                                null,
+                                it.original_title,
+                                it.overview,
+                                it.release_date.split("-")[0].toInt(),
+                                it.vote_average / 2,
+                                "https://image.tmdb.org/t/p/w500/${it.poster_path}"
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        private fun fetchAndDisplayMovies() {
             GlobalScope.launch {
                 val response = ApiClient.apiService.getNowPlayingMovies()
                 Log.d("Main", response.isSuccessful.toString())
 
                 if (response.isSuccessful) {
                     filmResults = response.body()?.results!!
-                    films = filmResults.map{ Film(null, it.original_title, it.overview, it.release_date.split("-")[0].toInt(), it.vote_average / 2, "https://image.tmdb.org/t/p/w500/${it.poster_path}") }
-                    updateAppWidget(context, appWidgetManager, appWidgetId)
-                } else {
-                    // Handle API error
+                    films = filmResults.map{ Film(
+                        null,
+                        it.original_title,
+                        it.overview,
+                        it.release_date.split("-")[0].toInt(),
+                        it.vote_average / 2,
+                        "https://image.tmdb.org/t/p/w500/${it.poster_path}")
+                    }
                 }
             }
         }
@@ -129,7 +160,7 @@ class WidgetFilm : AppWidgetProvider() {
             // click sur ajouter
             val intentAjouterActivity = Intent(context, AjouterEditerFilm::class.java)
 
-            intentAjouterActivity.putExtra(EXTRA_MODE, "Edit")
+            intentAjouterActivity.putExtra(EXTRA_MODE, "Widget")
             intentAjouterActivity.putExtra(EXTRA_TITRE, films[imageTracker].titre)
             intentAjouterActivity.putExtra(EXTRA_SLOGAN, films[imageTracker].description)
             intentAjouterActivity.putExtra(EXTRA_ANNEE, films[imageTracker].annee)
