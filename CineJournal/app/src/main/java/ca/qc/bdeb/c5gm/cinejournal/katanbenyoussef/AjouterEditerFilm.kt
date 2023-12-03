@@ -27,6 +27,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Date
 import java.util.Locale
 
@@ -92,21 +93,29 @@ class AjouterEditerFilm : AppCompatActivity() {
 
         val titre = intent.getStringExtra(EXTRA_TITRE)
         val slogan = intent.getStringExtra(EXTRA_SLOGAN)
-        val annee = intent.getIntExtra(EXTRA_ANNEE, 0)
-        val note = intent.getDoubleExtra(EXTRA_NOTE, 0.0)
+        val annee = intent.getStringExtra(EXTRA_ANNEE)
+        val note = intent.getStringExtra(EXTRA_NOTE)
         val imageUri = intent.getStringExtra(EXTRA_IMAGE)
 
+        val dateSortie = annee?.takeIf { it.isNotBlank() } ?: "1970-01-01"
 
+        try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val date = LocalDate.parse(dateSortie, formatter)
+            val yearString = date.year.toString()
+            editTitre.text = Editable.Factory.getInstance().newEditable(titre)
+            editSlogan.text = Editable.Factory.getInstance().newEditable(slogan)
+            editFilmRating.rating = (note?.toDouble() ?: 0 / 2).toFloat()
 
-        editTitre.text = Editable.Factory.getInstance().newEditable(titre)
-        editSlogan.text = Editable.Factory.getInstance().newEditable(slogan)
-        editAnnee.text = Editable.Factory.getInstance().newEditable(annee.toString())
-        editFilmRating.rating = (note / 2).toFloat()
+            val imageUrl = "https://image.tmdb.org/t/p/w500$imageUri"
+            Glide.with(this)
+                .load(imageUrl)
+                .into(editFilmImage)
 
-        val imageUrl = "https://image.tmdb.org/t/p/w500$imageUri"
-        Glide.with(this)
-            .load(imageUrl)
-            .into(editFilmImage)
+            editAnnee.text = Editable.Factory.getInstance().newEditable(yearString)
+        } catch (e: DateTimeParseException) {
+            e.printStackTrace()
+        }
 
         // rechage l'image si elle à déjà été sélectionné
         editFilmImage.setImageURI(viewModel.imageSelectionneUri)

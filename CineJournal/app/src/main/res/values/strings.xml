@@ -14,6 +14,7 @@
     <string name="tri_par_annee">Tri par année</string>
     <string name="tri_par_note">Tri par note</string>
     <string name="credits">Par Abderrahmane Katan et Salim Ben Youssef dans le cadre du cours 420-5GM-RE.</string>
+    <string name="creditsAPI">Cette application utilise l’API The Movie Database (TMDB).</string>
     <string name="titre_film">Titre film</string>
     <string name="trouver_un_film">Trouver un film</string>
     <string name="titre_du_film">Titre du film</string>

@@ -10,8 +10,11 @@ import android.widget.Button
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RechercheFragment : Fragment() {
     private lateinit var sharedViewModel: FilmViewModel
@@ -33,23 +36,60 @@ class RechercheFragment : Fragment() {
         filmRechercheInput = view.findViewById(R.id.filmRechercheInput)
 
         searchButton.setOnClickListener {
-            val searchTerm = filmRechercheInput.editText?.text.toString()
-            if (searchTerm.isNotEmpty()) {
-                lifecycleScope.launch {
-                    try {
+            lifecycleScope.launch {
+                try {
+                    val searchTerm = filmRechercheInput.editText?.text.toString()
+                    if (searchTerm.isNotEmpty()) {
                         val response = ApiClient.apiService.searchMovies(searchTerm)
 
                         if (response.isSuccessful) {
                             val filmResults = response.body()?.results
                             sharedViewModel.setMovieResults(filmResults)
+                        } else {
+                            afficherErreurSnackbar()
                         }
-                    } catch (e: Exception) {
-                        Log.d("API ERROR", "BYE BYE BEN")
                     }
+                } catch (e: Exception) {
+                    afficherErreurSnackbar()
                 }
             }
         }
 
         return view
+    }
+    private fun afficherErreurSnackbar() {
+        view?.let { view ->
+            val snackbar = Snackbar.make(
+                view,
+                "Une erreur s'est produite. Veuillez réessayer.",
+                Snackbar.LENGTH_INDEFINITE
+            )
+
+            snackbar.setAction("Réessayer") {
+                lifecycleScope.launch {
+                    relancerRecherche()
+                }
+            }
+
+            snackbar.show()
+        }
+    }
+
+    private suspend fun relancerRecherche() {
+        try {
+            val searchTerm = filmRechercheInput.editText?.text.toString()
+            if (searchTerm.isNotEmpty()) {
+                val response = withContext(Dispatchers.IO) {
+                    ApiClient.apiService.searchMovies(searchTerm)
+                }
+
+                if (response.isSuccessful) {
+                    val filmResults = response.body()?.results
+                    sharedViewModel.setMovieResults(filmResults)
+                }
+            }
+        } catch (e: Exception) {
+            afficherErreurSnackbar()
+        }
     }
 }

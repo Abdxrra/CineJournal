@@ -9,13 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,18 +24,24 @@ import kotlinx.coroutines.withContext
 class ResultatsFragment : Fragment() {
     private val sharedViewModel: FilmViewModel by activityViewModels()
     private lateinit var recyclerViewResults: RecyclerView
-    private lateinit var adapter: AdapteurRechercheResultats
-    private lateinit var adapteur: AdapteurListeFilm
+    private lateinit var adapteurRecherche: AdapteurRechercheResultats
+    private lateinit var adapteurFilms: AdapteurListeFilm
+    lateinit var activityAjouter: ActivityResultLauncher<Intent>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerViewResults = view.findViewById(R.id.resultatRecyclerView)
         recyclerViewResults.layoutManager = LinearLayoutManager(requireContext())
-        adapter = AdapteurRechercheResultats(emptyList())
-        recyclerViewResults.adapter = adapter
+        adapteurRecherche = AdapteurRechercheResultats(emptyList())
+        recyclerViewResults.adapter = adapteurRecherche
+        adapteurFilms = AdapteurListeFilm(
+            requireContext(),
+            MainActivity(),
+            ArrayList<Film>(),
+            { film ->  adapterOnclick(film) } )
 
-        val activityAjouter = registerForActivityResult(
+        activityAjouter = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -66,7 +73,7 @@ class ResultatsFragment : Fragment() {
                                 )
                             )
                         }
-                        adapteur.addFilm(
+                        adapteurFilms.addFilm(
                             Film(
                                 uid.toInt(),
                                 titre,
@@ -82,13 +89,13 @@ class ResultatsFragment : Fragment() {
             }
         }
 
-        adapter.setOnItemClickListener(object : AdapteurRechercheResultats.OnItemClickListener {
+        adapteurRecherche.setOnItemClickListener(object : AdapteurRechercheResultats.OnItemClickListener {
             override fun onItemClick(item: FilmResults) {
                 val intentMsg = Intent(requireContext(), AjouterEditerFilm::class.java)
                 intentMsg.putExtra(EXTRA_TITRE, item.title)
                 intentMsg.putExtra(EXTRA_SLOGAN, item.overview)
                 intentMsg.putExtra(EXTRA_ANNEE, item.release_date)
-                intentMsg.putExtra(EXTRA_NOTE, 0)
+                intentMsg.putExtra(EXTRA_NOTE, item.note)
                 intentMsg.putExtra(EXTRA_IMAGE, item.poster_path)
 
                 activityAjouter.launch(intentMsg)
@@ -102,14 +109,28 @@ class ResultatsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_resultats, container, false)
         recyclerViewResults = view.findViewById(R.id.resultatRecyclerView)
 
-        adapter = AdapteurRechercheResultats(emptyList())
-        recyclerViewResults.adapter = adapter
+        adapteurRecherche = AdapteurRechercheResultats(emptyList())
+        recyclerViewResults.adapter = adapteurRecherche
         recyclerViewResults.layoutManager = LinearLayoutManager(requireContext())
 
         sharedViewModel.movieResults.observe(viewLifecycleOwner) { filmResults ->
-            adapter.updateData(filmResults)
+            adapteurRecherche.updateData(filmResults)
         }
 
         return view
+    }
+
+    private fun adapterOnclick(film: Film) {
+
+        val intentMsg = Intent(requireContext(), MainActivity::class.java)
+        intentMsg.putExtra(EXTRA_MODE, "Edit")
+        intentMsg.putExtra(EXTRA_UID, film.uid)
+        intentMsg.putExtra(EXTRA_TITRE, film.titre)
+        intentMsg.putExtra(EXTRA_SLOGAN, film.description)
+        intentMsg.putExtra(EXTRA_ANNEE, film.annee)
+        intentMsg.putExtra(EXTRA_NOTE, film.rating)
+        intentMsg.putExtra(EXTRA_IMAGE, film.imageUri)
+
+        activityAjouter.launch(intentMsg)
     }
 }
