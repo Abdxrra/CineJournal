@@ -52,6 +52,10 @@ class AdapteurListeFilm(
         notifyDataSetChanged()
     }
 
+    fun test(){
+        notifyDataSetChanged()
+    }
+
     fun deleteAllFilms(){
         this.data.clear()
         notifyDataSetChanged()

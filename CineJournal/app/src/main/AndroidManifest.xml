@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TRÈS IMPORTANT! De base, les applications n'ont pas le droit d'accéder à Internet,
- vous devez explicitement le déclarer si vous souhaitez le faire -->
+    <!--
+ TRÈS IMPORTANT! De base, les applications n'ont pas le droit d'accéder à Internet,
+ vous devez explicitement le déclarer si vous souhaitez le faire
+    -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CineJournal"
         tools:targetApi="26">
+        <receiver
+            android:name=".WidgetFilm"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_films_info" />
+        </receiver>
+
         <activity
             android:name=".AProposActivity"
             android:exported="false" />
