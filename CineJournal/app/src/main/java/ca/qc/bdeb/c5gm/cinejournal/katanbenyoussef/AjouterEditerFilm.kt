@@ -3,7 +3,6 @@ package ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.text.Editable
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -19,17 +18,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import java.util.Date
 import java.util.Locale
 
@@ -88,31 +83,6 @@ class AjouterEditerFilm : AppCompatActivity() {
         editFilmRating = findViewById(R.id.editFilmRating)
         editFilmImage = findViewById(R.id.editFilmImage)
 
-        val titre = intent.getStringExtra(EXTRA_TITRE)
-        val slogan = intent.getStringExtra(EXTRA_SLOGAN)
-        val annee = intent.getStringExtra(EXTRA_ANNEE)
-        val note = intent.getStringExtra(EXTRA_NOTE)
-        val imageUri = intent.getStringExtra(EXTRA_IMAGE)
-
-        val dateSortie = annee?.takeIf { it.isNotBlank() } ?: "1970-01-01"
-
-        try {
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val date = LocalDate.parse(dateSortie, formatter)
-            val yearString = date.year.toString()
-            editTitre.text = Editable.Factory.getInstance().newEditable(titre)
-            editSlogan.text = Editable.Factory.getInstance().newEditable(slogan)
-            editFilmRating.rating = (note?.toDouble() ?: 0 / 2).toFloat()
-
-            val imageUrl = "https://image.tmdb.org/t/p/w500$imageUri"
-            Glide.with(this)
-                .load(imageUrl)
-                .into(editFilmImage)
-
-            editAnnee.text = Editable.Factory.getInstance().newEditable(yearString)
-        } catch (e: DateTimeParseException) {
-            e.printStackTrace()
-        }
 
         // rechage l'image si elle à déjà été sélectionné
         editFilmImage.setImageURI(viewModel.imageSelectionneUri)
@@ -121,23 +91,24 @@ class AjouterEditerFilm : AppCompatActivity() {
         val extras = intent.extras
         if (extras != null) {
             val mode = extras.getString(EXTRA_MODE)
-            Log.d("Main", mode.toString())
-            modeActivity.text = when (mode) {
+            modeActivity.text = "Nouveau Film"
 
-                // getInt(EXTRA_UID) retourne 0 si c'est null, donc je le met dans un switch
+             when (mode) {
+
+                // getInt(EXTRA_UID) retourne 0 si c'est null, donc j'utilise EXTRA_MODE pour savoir si on ajoute ou edit un film
                 "Edit" -> {
                     uid = extras.getInt(EXTRA_UID)
                     setExtrasInDisplay(extras)
-                    "Modifier un Film"
+                    modeActivity.text = "Modifier un Film"
                 }
                 "Widget" -> {
-                    uid = null
                     setExtrasInDisplay(extras)
-                    "Nouveau Film"
                 }
-
-                else -> "Nouveau Film"
+                "Recherche" -> {
+                    setExtrasInDisplay(extras)
+                }
             }
+
         }
         imgBtn.setOnClickListener {
             selectionPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -150,7 +121,13 @@ class AjouterEditerFilm : AppCompatActivity() {
         editAnnee.setText(extras.getInt(EXTRA_ANNEE).toString())
         editFilmRating.rating = extras.getDouble(EXTRA_NOTE).toFloat()
         viewModel.imageSelectionneUri = extras.getString(EXTRA_IMAGE)!!.toUri()
-        editFilmImage.setImageURI(viewModel.imageSelectionneUri)
+        loadImage(viewModel.imageSelectionneUri!!)
+    }
+
+    fun loadImage(uri: Uri){
+        Glide.with(this)
+            .load(uri)
+            .into(editFilmImage)
     }
 
     override fun onSupportNavigateUp(): Boolean {

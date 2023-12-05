@@ -5,6 +5,7 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val layout: ConstraintLayout
@@ -26,7 +27,14 @@ class ItemFilmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: Film) {
         if (item.imageUri != "") {
-            image.setImageURI(item.imageUri.toUri())
+            if(item.imageUri.startsWith("https")){
+                Glide.with(itemView)
+                    .load(item.imageUri)
+                    .into(image)
+            }
+            else{
+                image.setImageURI(item.imageUri.toUri())
+            }
         } else {
             image.setImageResource(R.drawable.defaultimage)
         }

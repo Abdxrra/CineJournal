@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +20,7 @@ import kotlinx.coroutines.withContext
 class RechercheFragment : Fragment() {
     private lateinit var sharedViewModel: FilmViewModel
     private lateinit var searchButton: Button
-    private lateinit var filmRechercheInput: TextInputLayout
+    private lateinit var filmRechercheInput: EditText
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,12 +39,13 @@ class RechercheFragment : Fragment() {
         searchButton.setOnClickListener {
             lifecycleScope.launch {
                 try {
-                    val searchTerm = filmRechercheInput.editText?.text.toString()
+                    val searchTerm = filmRechercheInput.text.toString()
                     if (searchTerm.isNotEmpty()) {
                         val response = ApiClient.apiService.searchMovies(searchTerm)
 
                         if (response.isSuccessful) {
                             val filmResults = response.body()?.results
+                            Log.d("main", filmResults.toString())
                             sharedViewModel.setMovieResults(filmResults)
                         } else {
                             afficherErreurSnackbar()
@@ -77,7 +79,7 @@ class RechercheFragment : Fragment() {
 
     private suspend fun relancerRecherche() {
         try {
-            val searchTerm = filmRechercheInput.editText?.text.toString()
+            val searchTerm = filmRechercheInput.text.toString()
             if (searchTerm.isNotEmpty()) {
                 val response = withContext(Dispatchers.IO) {
                     ApiClient.apiService.searchMovies(searchTerm)

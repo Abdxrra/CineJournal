@@ -91,12 +91,14 @@ class ResultatsFragment : Fragment() {
 
         adapteurRecherche.setOnItemClickListener(object : AdapteurRechercheResultats.OnItemClickListener {
             override fun onItemClick(item: FilmResults) {
-                val intentMsg = Intent(requireContext(), AjouterEditerFilm::class.java)
+                val intentMsg = Intent(requireContext(), MainActivity::class.java)
+                Log.d("main", item.toString())
+                intentMsg.putExtra(EXTRA_MODE, "Recherche")
                 intentMsg.putExtra(EXTRA_TITRE, item.title)
                 intentMsg.putExtra(EXTRA_SLOGAN, item.overview)
-                intentMsg.putExtra(EXTRA_ANNEE, item.release_date)
-                intentMsg.putExtra(EXTRA_NOTE, item.note)
-                intentMsg.putExtra(EXTRA_IMAGE, item.poster_path)
+                intentMsg.putExtra(EXTRA_ANNEE, item.release_date.split("-")[0].toInt())
+                intentMsg.putExtra(EXTRA_NOTE, item.vote_average / 2)
+                intentMsg.putExtra(EXTRA_IMAGE, "https://image.tmdb.org/t/p/w500${item.poster_path}")
 
                 activityAjouter.launch(intentMsg)
             }

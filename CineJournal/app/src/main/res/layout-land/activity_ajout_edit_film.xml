@@ -83,6 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="27dp"
+        android:backgroundTint="        #DC2727"
         android:onClick="annuler"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"

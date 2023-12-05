@@ -22,15 +22,17 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/toolbar" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment2"
         android:name="ca.qc.bdeb.c5gm.cinejournal.katanbenyoussef.ResultatsFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="170dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
